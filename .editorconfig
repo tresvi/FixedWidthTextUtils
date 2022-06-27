@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# IDE0083: Usar coincidencia de patrones
+dotnet_diagnostic.IDE0083.severity = none
