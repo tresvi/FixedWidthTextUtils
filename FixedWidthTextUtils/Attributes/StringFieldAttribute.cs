@@ -1,8 +1,8 @@
-﻿using FixedFlatFileUtils.Exceptions;
+﻿using FixedWidthTextUtils.Exceptions;
 using System;
 using System.Reflection;
 
-namespace FixedFlatFileUtils.Attributes
+namespace FixedWidthTextUtils.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
     public sealed class StringFieldAttribute : FieldAttribute

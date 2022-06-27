@@ -1,4 +1,4 @@
-﻿namespace Models.FixedFlatFileUtils
+﻿namespace Models.FixedWidthTextUtils
 {
     public class InvalidLine
     {

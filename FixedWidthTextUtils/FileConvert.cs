@@ -1,11 +1,11 @@
-﻿using FixedFlatFileUtils.Exceptions;
-using Models.FixedFlatFileUtils;
+﻿using FixedWidthTextUtils.Exceptions;
+using Models.FixedWidthTextUtils;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace FixedFlatFileUtils
+namespace FixedWidthTextUtils
 {
     public class FileConvert
     {

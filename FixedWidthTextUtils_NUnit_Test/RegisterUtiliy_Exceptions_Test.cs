@@ -1,11 +1,11 @@
-﻿using FixedFlatFileUtils;
-using FixedFlatFileUtils.Exceptions;
-using FixedFlatFileUtils_NUnit_Test.Models;
+﻿using FixedWidthTextUtils;
+using FixedWidthTextUtils.Exceptions;
+using FixedWidthTextUtils_NUnit_Test.Models;
 using FixedWidthTextUtils_NUnit_Test.Models;
 using NUnit.Framework;
 using System;
 
-namespace FixedFlatFileUtils_NUnit_Test
+namespace FixedWidthTextUtils_NUnit_Test
 {
     [TestFixture]
     internal class RegisterUtiliy_Exceptions_Test

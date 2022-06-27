@@ -1,7 +1,7 @@
-﻿using FixedFlatFileUtils.Attributes;
+﻿using FixedWidthTextUtils.Attributes;
 using System;
 
-namespace FixedFlatFileUtils_NUnit_Test.Models
+namespace FixedWidthTextUtils_NUnit_Test.Models
 {
     public class Client_NonStringeable
     {

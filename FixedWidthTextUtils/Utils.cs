@@ -1,12 +1,12 @@
-﻿using FixedFlatFileUtils.Attributes;
-using FixedFlatFileUtils.Exceptions;
+﻿using FixedWidthTextUtils.Attributes;
+using FixedWidthTextUtils.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace FixedFlatFileUtils
+namespace FixedWidthTextUtils
 {
     internal static class Utils
     {

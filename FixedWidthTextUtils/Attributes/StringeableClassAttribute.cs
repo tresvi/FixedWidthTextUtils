@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace FixedFlatFileUtils.Attributes
+namespace FixedWidthTextUtils.Attributes
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class StringeableClassAttribute : Attribute

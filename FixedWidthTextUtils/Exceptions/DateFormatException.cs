@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FixedFlatFileUtils.Exceptions
+namespace FixedWidthTextUtils.Exceptions
 {
     public class DateFormatException: FixedWidthTextException
     {

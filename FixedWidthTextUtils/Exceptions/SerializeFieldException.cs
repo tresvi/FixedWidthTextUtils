@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FixedFlatFileUtils.Exceptions
+namespace FixedWidthTextUtils.Exceptions
 {
     public class SerializeFieldException : FixedWidthTextException
     {

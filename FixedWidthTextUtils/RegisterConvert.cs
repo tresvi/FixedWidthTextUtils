@@ -1,10 +1,10 @@
-﻿using FixedFlatFileUtils.Attributes;
-using FixedFlatFileUtils.Exceptions;
+﻿using FixedWidthTextUtils.Attributes;
+using FixedWidthTextUtils.Exceptions;
 using System;
 using System.Reflection;
 using System.Text;
 
-namespace FixedFlatFileUtils
+namespace FixedWidthTextUtils
 {
     public static class RegisterConvert
     {

@@ -1,7 +1,7 @@
-﻿using FixedFlatFileUtils.Attributes;
+﻿using FixedWidthTextUtils.Attributes;
 using System;
 
-namespace FixedFlatFileUtils_NUnit_Test.Models
+namespace FixedWidthTextUtils_NUnit_Test.Models
 {
     [StringeableClass(21, ' ')]
     internal class Client_With_Priv_Method

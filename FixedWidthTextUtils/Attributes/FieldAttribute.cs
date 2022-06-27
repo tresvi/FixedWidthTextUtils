@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace FixedFlatFileUtils.Attributes
+namespace FixedWidthTextUtils.Attributes
 {
     public abstract class FieldAttribute : Attribute
     {

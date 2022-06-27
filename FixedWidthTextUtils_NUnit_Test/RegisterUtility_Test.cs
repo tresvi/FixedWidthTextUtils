@@ -1,11 +1,11 @@
 ﻿using NUnit.Framework;
-using FixedFlatFileUtils.Attributes;
-using FixedFlatFileUtils_NUnit_Test.Models;
+using FixedWidthTextUtils.Attributes;
+using FixedWidthTextUtils_NUnit_Test.Models;
 using System;
 using System.Reflection;
-using FixedFlatFileUtils;
+using FixedWidthTextUtils;
 
-namespace FixedFlatFileUtils_NUnit
+namespace FixedWidthTextUtils_NUnit
 {
     [TestFixture]
     public class RegisterUtility_Test

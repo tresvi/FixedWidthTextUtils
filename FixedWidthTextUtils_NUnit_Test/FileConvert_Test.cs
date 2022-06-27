@@ -1,10 +1,10 @@
-﻿using FixedFlatFileUtils;
-using FixedFlatFileUtils_NUnit_Test.Models;
+﻿using FixedWidthTextUtils;
+using FixedWidthTextUtils_NUnit_Test.Models;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FixedFlatFileUtils_NUnit_Test
+namespace FixedWidthTextUtils_NUnit_Test
 {
     [TestFixture]
     internal class FileConvert_Test

@@ -1,4 +1,4 @@
-﻿using FixedFlatFileUtils.Attributes;
+﻿using FixedWidthTextUtils.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,9 +1,9 @@
-﻿using FixedFlatFileUtils.Attributes;
+﻿using FixedWidthTextUtils.Attributes;
 using System;
 using System.Reflection;
 using System.Text;
 
-namespace FixedFlatFileUtils_NUnit_Test.Models
+namespace FixedWidthTextUtils_NUnit_Test.Models
 {
 
     [StringeableClass(110, ' ')]

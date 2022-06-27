@@ -1,9 +1,9 @@
-﻿using FixedFlatFileUtils.Exceptions;
+﻿using FixedWidthTextUtils.Exceptions;
 using System;
 using System.Globalization;
 using System.Reflection;
 
-namespace FixedFlatFileUtils.Attributes
+namespace FixedWidthTextUtils.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
     public sealed class DateTimeFieldAttribute : FieldAttribute
