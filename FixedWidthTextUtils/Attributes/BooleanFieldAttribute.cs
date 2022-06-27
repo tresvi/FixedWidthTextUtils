@@ -1,9 +1,6 @@
-﻿using FixedWidthTextUtils.Attributes;
-using FixedWidthTextUtils.Exceptions;
+﻿using FixedWidthTextUtils.Exceptions;
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
 namespace FixedWidthTextUtils.Attributes
 {
@@ -35,9 +32,10 @@ namespace FixedWidthTextUtils.Attributes
         /// <param name="textForFalse"></param>
         /// <param name="textForTrue"></param>
         /// <param name="textFroFalse"></param>
-        public BooleanFieldAttribute(int startPosition, int endPosition, string textForFalse, string textForTrue, string textFroFalse) 
+        public BooleanFieldAttribute(int startPosition, int endPosition, string textForTrue, string textForFalse) 
             : base(startPosition, endPosition)
         {
+            this.TextForTrue = textForTrue;
             this.TextForFalse = textForFalse;
         }
 
