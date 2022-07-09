@@ -79,5 +79,14 @@ namespace FixedWidthTextUtils
             return parsedLines;
         }
 
+
+        public void SerializeFile<T>(List<T> entities,  string outputPath, Encoding encoding = Encoding.UTF8)
+        {
+            foreach (T entity in entities)
+            { 
+                entity.Serialize(entity, outputPath, encoding);
+            }
+        
+        }
     }
 }
