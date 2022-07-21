@@ -8,7 +8,7 @@ namespace FixedWidthTextUtils
 {
     public static class LineParser
     {
-        //TODO: Agregar soporte clases con properties con los tipos conocidos, pero nullables. Hoy en dia solo soporta nullable de string
+        //TODO: Agregar soporte clases con properties con los tipos conocidos, pero nullables. Hoy en dia solo soporta nullable de string. Si se toma un nulo, se puede serializar con el fillerchar correspondiente
         //TODO: Agregar Cache estatico para cada tipo de objeto, memorizando el LineLength y el FillerChar por cada tipo de objeto usado
         //TODO: Agregar cache estatico de Attributtes por Propiedad por Objeto, para que no tenga que recorrer todos los attributes de objetos que ya conoce.
         //TODO: Agregar algun control o indicador de que hay campos cuya definicion se solapa.
