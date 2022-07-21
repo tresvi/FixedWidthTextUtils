@@ -7,15 +7,15 @@ using System.Linq;
 namespace FixedWidthTextUtils_NUnit_Test
 {
     [TestFixture]
-    internal class FileConvert_Test
+    internal class FileParser_Test
     {
 
         [TestCase(@".\..\..\..\TestFiles\3ClientesOK.txt", 3, new long[] {})]
         [TestCase(@".\..\..\..\TestFiles\4Clientes_3roConError.txt", 3, new long[] { 3 })]
         public void ParseFile_InputIgnoreWrongLines(string filePath, int expectedTotalLinesOK, long[] expectedNumbersOfFailedLines)
         {
-            FileConvert fileConvert = new(filePath);
-            List<ClienteSimple> clientes = fileConvert.ParseFile<ClienteSimple>(true);
+            FileParser fileConvert = new(filePath);
+            List<ClienteSimple> clientes = fileConvert.Parse<ClienteSimple>(true);
 
             Assert.AreEqual(expectedTotalLinesOK, clientes.Count);
             Assert.AreEqual(expectedNumbersOfFailedLines.Length, fileConvert.InvalidLines.Count);

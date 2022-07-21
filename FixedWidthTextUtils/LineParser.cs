@@ -6,7 +6,7 @@ using System.Text;
 
 namespace FixedWidthTextUtils
 {
-    public static class RegisterConvert
+    public static class LineParser
     {
         //TODO: Agregar soporte clases con properties con los tipos conocidos, pero nullables. Hoy en dia solo soporta nullable de string
         //TODO: Agregar Cache estatico para cada tipo de objeto, memorizando el LineLength y el FillerChar por cada tipo de objeto usado

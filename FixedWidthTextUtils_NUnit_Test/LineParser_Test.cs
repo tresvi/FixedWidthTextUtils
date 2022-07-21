@@ -8,7 +8,7 @@ using FixedWidthTextUtils;
 namespace FixedWidthTextUtils_NUnit
 {
     [TestFixture]
-    public class RegisterUtility_Test
+    public class LineParser_Test
     {
         private static Cliente cliente1 = new();
         private const string inputLine1 = "123456789ANed Flanders        WhateverStreet      04566 2222Brussels      Belgium        1981122918091991991991920211229101112    2021013010111220210131101112    -0000123451111111111-92222222222299999999999990001234525  123   123456729121981";
@@ -90,7 +90,7 @@ namespace FixedWidthTextUtils_NUnit
                 throw new Exception("Nro de Cliente desconocido 1");
 
             //act
-            Cliente clienteParseado = RegisterConvert.Parse<Cliente>(inputLine);
+            Cliente clienteParseado = LineParser.Parse<Cliente>(inputLine);
 
             //assert. Recorre automaticamente todas las propiedades parseables de la clase
             Assert.Multiple(() =>
@@ -114,8 +114,8 @@ namespace FixedWidthTextUtils_NUnit
             //arrrange
 
             //act
-            Cliente clienteParseado = RegisterConvert.Parse<Cliente>(inputLine);
-            string outputLine = RegisterConvert.ToFlatLine(clienteParseado);
+            Cliente clienteParseado = LineParser.Parse<Cliente>(inputLine);
+            string outputLine = LineParser.ToFlatLine(clienteParseado);
 
             //asssert
             Assert.AreEqual(inputLine, outputLine);
@@ -128,8 +128,8 @@ namespace FixedWidthTextUtils_NUnit
             //arrrange
 
             //act
-            Client_With_Priv_Method clienteParseado = RegisterConvert.Parse<Client_With_Priv_Method>(inputLine);
-            string outputLine = RegisterConvert.ToFlatLine(clienteParseado);
+            Client_With_Priv_Method clienteParseado = LineParser.Parse<Client_With_Priv_Method>(inputLine);
+            string outputLine = LineParser.ToFlatLine(clienteParseado);
 
             //asssert
             Assert.AreEqual(inputLine, outputLine);

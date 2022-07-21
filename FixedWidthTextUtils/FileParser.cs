@@ -1,26 +1,29 @@
-﻿using FixedWidthTextUtils.Exceptions;
+﻿using FixedWidthTextUtils.Attributes;
+using FixedWidthTextUtils.Exceptions;
 using Models.FixedWidthTextUtils;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace FixedWidthTextUtils
 {
-    public class FileConvert
+    public class FileParser
     {
         public string Path { get; set; }
         public Encoding Encoding { get; set; }
         public List<InvalidLine> InvalidLines { get; set; }
 
-        public FileConvert(string path)
+        public FileParser(string path)
         {
             Path = path;
             Encoding = Encoding.UTF8;
             InvalidLines = new List<InvalidLine>();
         }
 
-        public FileConvert(string path, Encoding encoding)
+        public FileParser(string path, Encoding encoding)
         {
             Path = path;
             Encoding = encoding;
@@ -28,7 +31,7 @@ namespace FixedWidthTextUtils
         }
 
 
-        public List<T> ParseFile<T>(bool ignoreWrongLines) where T : new()
+        public List<T> Parse<T>(bool ignoreWrongLines) where T : new()
         {
             List<T> parsedLines = new List<T>();
             long lineNumber = 0;
@@ -56,7 +59,7 @@ namespace FixedWidthTextUtils
                                     throw new ParseFieldException(errorLineLengthMsge);
                             }
 
-                            parsedLines.Add(RegisterConvert.Parse<T>(inputLine));
+                            parsedLines.Add(LineParser.Parse<T>(inputLine));
                         }
                         catch (Exception ex)
                         {
@@ -80,13 +83,21 @@ namespace FixedWidthTextUtils
         }
 
 
-        public void SerializeFile<T>(List<T> entities,  string outputPath, Encoding encoding = Encoding.UTF8)
+        public void ToFlatFile<T>(List<T> entities,  string outputPath)
         {
-            foreach (T entity in entities)
-            { 
-                entity.Serialize(entity, outputPath, encoding);
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(outputPath))
+                {
+                    foreach (object entity in entities)
+                        writer.WriteLine(LineParser.ToFlatLine(entity));
+                }
             }
-        
+            catch
+            {
+                throw;
+            }
         }
+
     }
 }
