@@ -26,7 +26,7 @@ namespace FixedWidthTextUtils_NUnit_Test
 
             Assert.Multiple(() =>
             {
-                Assert.Throws<NonStringeableClassException>(() => LineParser.ToFlatLine(parsedClient));
+                Assert.Throws<NonStringeableClassException>(() => LineParser.ToTextLine(parsedClient));
                 Assert.Throws<NonStringeableClassException>(() => fileConvert.Parse<Client_NonStringeable>(true));
             });
         }

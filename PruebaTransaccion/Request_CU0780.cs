@@ -38,7 +38,7 @@ namespace PruebaTransaccion
         public DateTime FechaDesdeBonifPercepIVA { get; set; }
         public DateTime FechaHastaBonifPercepIVA { get; set; }
         public int CodigoDeActividad { get; set; }
-        public int CodigoDeProfesion {get; set}
+        public int CodigoDeProfesion { get; set; }
 
         public int OficialDeCuenta { get; set; }
         public string CarpetaCredito_Ramo { get; set; }

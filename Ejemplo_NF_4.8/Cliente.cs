@@ -40,9 +40,8 @@ namespace Ejemplo_NF_4._8
         [FloatingField(100, 102, 1, true)]
         public float WeightFloat { get; set; }
 
-      
-        public float PropertyParaNoSerailizar { get; set; }
-        public DateTime PropertyComputada { get { return DateTime.Now; } }
+        public float PropertyNotSerialized { get; set; }
+        public DateTime PropertyComputedExample { get { return DateTime.Now; } }
 
     }
 }

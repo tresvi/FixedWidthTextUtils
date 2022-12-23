@@ -29,7 +29,7 @@ namespace FixedWidthTextUtils
         }
 
 
-        public static string ToFlatLine(object value)
+        public static string ToTextLine(object value)
         {
             string initializedLine = Utils.GetInitializedLine(value);
             int maxLineLength = initializedLine.Length;

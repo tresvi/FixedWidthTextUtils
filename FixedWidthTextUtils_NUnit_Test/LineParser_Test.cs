@@ -115,7 +115,7 @@ namespace FixedWidthTextUtils_NUnit
 
             //act
             Cliente clienteParseado = LineParser.Parse<Cliente>(inputLine);
-            string outputLine = LineParser.ToFlatLine(clienteParseado);
+            string outputLine = LineParser.ToTextLine(clienteParseado);
 
             //asssert
             Assert.AreEqual(inputLine, outputLine);
@@ -129,7 +129,7 @@ namespace FixedWidthTextUtils_NUnit
 
             //act
             Client_With_Priv_Method clienteParseado = LineParser.Parse<Client_With_Priv_Method>(inputLine);
-            string outputLine = LineParser.ToFlatLine(clienteParseado);
+            string outputLine = LineParser.ToTextLine(clienteParseado);
 
             //asssert
             Assert.AreEqual(inputLine, outputLine);

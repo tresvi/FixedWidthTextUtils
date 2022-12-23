@@ -90,7 +90,7 @@ namespace FixedWidthTextUtils
                 using (StreamWriter writer = new StreamWriter(outputPath))
                 {
                     foreach (object entity in entities)
-                        writer.WriteLine(LineParser.ToFlatLine(entity));
+                        writer.WriteLine(LineParser.ToTextLine(entity));
                 }
             }
             catch
