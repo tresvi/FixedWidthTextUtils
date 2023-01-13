@@ -9,11 +9,13 @@ namespace Ejemplo_NF_4._8
     {
         static void Main(string[] args)
         {
-            const string inputLine = "123456789ANed Flanders        WhateverStreet      04566 2222Brussels      Belgium        1981122918091991991991920211229101112    2021013010111220210131101112    -0000123451111111111-92222222222299999999999990001234525  123   123456729121981";
+            //const string inputLine = "123456789ANed Flanders        WhateverStreet      04566 2222Brussels      Belgium        1981122918091991991991920211229101112    2021013010111220210131101112    -0000123451111111111-92222222222299999999999990001234525  123   123456729121981";
+            const string inputLine = "AJuanPerezYES6109202211191234";
 
             try
             {
-                Cliente parsedClient = LineParser.Parse<Cliente>(inputLine);
+                //Cliente parsedClient = LineParser.Parse<Cliente>(inputLine);
+                ClienteOrdinal parsedClient = LineParser.Parse<ClienteOrdinal>(inputLine);
                 PrintObject(parsedClient);
             }
             catch (Exception exception)

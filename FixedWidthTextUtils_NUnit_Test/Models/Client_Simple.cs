@@ -7,31 +7,31 @@ namespace FixedWidthTextUtils_NUnit_Test.Models
 {
 
     [StringeableClass(110, ' ')]
-    internal class ClienteSimple
+    internal class Client_Simple
     {
         [IntegerField(0, 8, true)]
         public long Id { get; set; }
 
         [StringField(9, 9)]
-        public string Code { get; set; }
+        public string? Code { get; set; }
 
         [StringField(10, 29, StringFieldAttribute.TrimMode.Trim)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [StringField(30, 49)]
-        public string Street { get; set; }
+        public string Street { get; set; } = "";
 
         [IntegerField(50, 54, true)]
         public int HouseNumber { get; set; }
 
         [StringField(55, 59, StringFieldAttribute.TrimMode.TrimStart, true)]
-        public string PostCode { get; set; }
+        public string? PostCode { get; set; }
 
         [StringField(60, 73, StringFieldAttribute.TrimMode.TrimEnd)]
-        public string City { get; set; }
+        public string? City { get; set; }
 
         [StringField(74, 88, StringFieldAttribute.TrimMode.Trim)]
-        public string Country { get; set; }
+        public string Country { get; set; } = "";
 
         [DateTimeField(89, 96, "yyyyMMdd")]
         public DateTime BirthDate { get; set; }

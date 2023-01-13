@@ -1,9 +1,7 @@
 ﻿using FixedWidthTextUtils;
 using FixedWidthTextUtils.Exceptions;
 using FixedWidthTextUtils_NUnit_Test.Models;
-using FixedWidthTextUtils_NUnit_Test.Models;
 using NUnit.Framework;
-using System;
 
 namespace FixedWidthTextUtils_NUnit_Test
 {

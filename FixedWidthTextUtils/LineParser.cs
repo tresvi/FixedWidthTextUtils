@@ -12,7 +12,8 @@ namespace FixedWidthTextUtils
         //TODO: Agregar Cache estatico para cada tipo de objeto, memorizando el LineLength y el FillerChar por cada tipo de objeto usado
         //TODO: Agregar cache estatico de Attributtes por Propiedad por Objeto, para que no tenga que recorrer todos los attributes de objetos que ya conoce.
         //TODO: Agregar algun control o indicador de que hay campos cuya definicion se solapa.
-
+        //TODO: Para los stringFieldAttibute se valida la start position y la endPosition, en los demas no.
+        //TODO: Usar {nameof(fieldLength)} en donde se mencionen nombres de properties
 
         public static bool TryParse<T>(string input, out T result) where T : new()
         {
@@ -58,6 +59,8 @@ namespace FixedWidthTextUtils
         {
             if (String.IsNullOrEmpty(input)) return new T();
             T targetObject = new T();
+            
+            int ordinalModePositionCounter = 0;
 
             PropertyInfo[] properties = targetObject.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -65,13 +68,20 @@ namespace FixedWidthTextUtils
             {
                 foreach (FieldAttribute fieldAttrib in property.GetCustomAttributes(typeof(FieldAttribute), true))
                 {
-                    if (fieldAttrib.EndPosition > input.Length - 1)
-                        throw new ParseFieldException($"La definicion de la propiedad {property.Name} posee un EndPosition " +
-                            $"({fieldAttrib.EndPosition}) que excede el largo de la linea de entrada ({input.Length} caracteres)");
+                    if (fieldAttrib.IsOrdinalMode)
+                    {
+                        fieldAttrib.StartPosition = ordinalModePositionCounter;
+                        fieldAttrib.EndPosition = ordinalModePositionCounter + fieldAttrib.FieldLength - 1;
+                        ordinalModePositionCounter += fieldAttrib.FieldLength;
+                    }
 
                     if (fieldAttrib.StartPosition > input.Length - 1)
                         throw new ParseFieldException($"La definicion de la propiedad {property.Name} posee un StartPosition " +
                             $"({fieldAttrib.StartPosition}) que excede el largo de la linea de entrada de {input.Length} caracteres)");
+
+                    if (fieldAttrib.EndPosition > input.Length - 1)
+                        throw new ParseFieldException($"La definicion de la propiedad {property.Name} posee un EndPosition " +
+                            $"({fieldAttrib.EndPosition}) que excede el largo de la linea de entrada ({input.Length} caracteres)");
 
                     string rawFieldContent = input.Substring(fieldAttrib.StartPosition, Math.Min((fieldAttrib.EndPosition - fieldAttrib.StartPosition + 1), input.Length - fieldAttrib.StartPosition));
 

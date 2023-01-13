@@ -10,10 +10,10 @@ namespace FixedWidthTextUtils_NUnit
     [TestFixture]
     public class LineParser_Test
     {
-        private static Cliente cliente1 = new();
+        private static Client cliente1 = new();
         private const string inputLine1 = "123456789ANed Flanders        WhateverStreet      04566 2222Brussels      Belgium        1981122918091991991991920211229101112    2021013010111220210131101112    -0000123451111111111-92222222222299999999999990001234525  123   123456729121981";
         
-        private Cliente cliente2 = new();
+        private Client cliente2 = new();
         private const string inputLine2 = "222222222AHomero Simpson      WhateverStreet      00117 2222Brussels      Belgium        1981122918091191191191120211229191112    2021013019111220210131191112    -0000123451111111111-9222222222229999999999999-001234525 -123  -123456731121981";
 
         [SetUp]
@@ -80,7 +80,7 @@ namespace FixedWidthTextUtils_NUnit
         public void Parse_InputString_ReturnCliente(string inputLine, int NroCliente)
         {
             //arrrange
-            Cliente clienteEsperado;
+            Client clienteEsperado;
 
             if (NroCliente == 1)
                 clienteEsperado = cliente1;
@@ -90,7 +90,7 @@ namespace FixedWidthTextUtils_NUnit
                 throw new Exception("Nro de Cliente desconocido 1");
 
             //act
-            Cliente clienteParseado = LineParser.Parse<Cliente>(inputLine);
+            Client clienteParseado = LineParser.Parse<Client>(inputLine);
 
             //assert. Recorre automaticamente todas las propiedades parseables de la clase
             Assert.Multiple(() =>
@@ -109,12 +109,12 @@ namespace FixedWidthTextUtils_NUnit
 
         [TestCase(inputLine1)]
         [TestCase(inputLine2)]
-        public void ToFlatLine2_InputString_ReturnString(string inputLine)
+        public void ToTextLine_InputString_ReturnString(string inputLine)
         {
             //arrrange
 
             //act
-            Cliente clienteParseado = LineParser.Parse<Cliente>(inputLine);
+            Client clienteParseado = LineParser.Parse<Client>(inputLine);
             string outputLine = LineParser.ToTextLine(clienteParseado);
 
             //asssert
@@ -123,7 +123,7 @@ namespace FixedWidthTextUtils_NUnit
 
 
         [TestCase("012345678A20221229023")]
-        public void ToFlatLine2_InputString_AssignInInternalAndPrivMethods(string inputLine)
+        public void ToTextLine_InputString_AssignInInternalAndPrivMethods(string inputLine)
         {
             //arrrange
 

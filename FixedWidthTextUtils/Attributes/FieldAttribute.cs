@@ -7,7 +7,10 @@ namespace FixedWidthTextUtils.Attributes
     {
         internal int StartPosition { get; set; }
         internal int EndPosition { get; set; }
-        internal int Length
+        internal int FieldLength { get; set; }
+        internal bool IsOrdinalMode { get; set; }
+
+        protected int Length
         {
             get { return EndPosition - StartPosition + 1; }
         }
@@ -22,6 +25,13 @@ namespace FixedWidthTextUtils.Attributes
 
             StartPosition = startPosition;
             EndPosition = endPosition;
+            IsOrdinalMode = false;
+        }
+
+        public FieldAttribute(int fieldLength)
+        {
+            FieldLength = fieldLength;
+            IsOrdinalMode = true;
         }
 
         internal abstract void Parse(PropertyInfo property, object targetObject, string rawFieldContent);

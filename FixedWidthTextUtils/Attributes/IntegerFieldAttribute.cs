@@ -17,6 +17,10 @@ namespace FixedWidthTextUtils.Attributes
             FillLeftWithZero = fillLeftWithZero;
         }
 
+        public IntegerFieldAttribute(int fieldLenght, bool fillLeftWithZero) : base(fieldLenght)
+        {
+            FillLeftWithZero = fillLeftWithZero;
+        }
 
         internal override void Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {

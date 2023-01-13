@@ -7,7 +7,7 @@ namespace FixedWidthTextUtils_NUnit_Test.Models
 {
 
     [StringeableClass(241, ' ')]
-    internal class Cliente
+    internal class Client
     {
         [IntegerField(0, 8, true)]
         public long Id { get; set; }

@@ -7,7 +7,7 @@ namespace FixedWidthTextUtils.Attributes
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
     public class BooleanFieldAttribute : FieldAttribute
     {
-        public string TextForTrue { get; set; }
+        public string TextForTrue  { get; set; }
         public string TextForFalse { get; set; }
 
         ///// <summary>
@@ -25,13 +25,12 @@ namespace FixedWidthTextUtils.Attributes
 
         /// <summary>
         /// Constructor. Asigna True a aquellas palabras que coincidan con textForTrue, False a todas
-        /// aquellas que coincidan con textForFalse, y un lanzará una excepcion en caso de no reocnocer ningun valor.
+        /// aquellas que coincidan con textForFalse, y un lanzará una excepcion en caso de no reconocer ningun valor.
         /// </summary>
         /// <param name="startPosition"></param>
         /// <param name="endPosition"></param>
         /// <param name="textForFalse"></param>
         /// <param name="textForTrue"></param>
-        /// <param name="textFroFalse"></param>
         public BooleanFieldAttribute(int startPosition, int endPosition, string textForTrue, string textForFalse) 
             : base(startPosition, endPosition)
         {
@@ -39,6 +38,20 @@ namespace FixedWidthTextUtils.Attributes
             this.TextForFalse = textForFalse;
         }
 
+        /// <summary>
+        /// Constructor. Asigna True a aquellas palabras que coincidan con textForTrue, False a todas
+        /// aquellas que coincidan con textForFalse, y un lanzará una excepcion en caso de no reconocer ningun valor.
+        /// </summary>
+        /// <param name="fieldLength">Longitud del campo</param>
+        /// <param name="endPosition"></param>
+        /// <param name="textForFalse"></param>
+        /// <param name="textForTrue"></param>
+        public BooleanFieldAttribute(int fieldLength, string textForTrue, string textForFalse)
+            : base(fieldLength)
+        {
+            this.TextForTrue = textForTrue;
+            this.TextForFalse = textForFalse;
+        }
 
         internal override void Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {

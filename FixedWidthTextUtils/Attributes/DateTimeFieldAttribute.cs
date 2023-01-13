@@ -22,6 +22,14 @@ namespace FixedWidthTextUtils.Attributes
             LeftPadding = leftPadding;
         }
 
+        public DateTimeFieldAttribute(int fieldLength, string format, bool leftPadding = false) : base(fieldLength)
+        {
+            if (string.IsNullOrWhiteSpace(format))
+                throw new ArgumentException(nameof(format), " format no puede ser un valor nulo");      //!! Revisar de como cambiarlo por una excpecion propia
+
+            Format = format;
+            LeftPadding = leftPadding;
+        }
 
         internal override void Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {

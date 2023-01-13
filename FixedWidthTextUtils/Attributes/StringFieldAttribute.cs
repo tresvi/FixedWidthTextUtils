@@ -18,7 +18,16 @@ namespace FixedWidthTextUtils.Attributes
                 throw new ArgumentException(nameof(startPosition), "StartPosition debe ser >= 0");
 
             if (endPosition < startPosition)
-                throw new ArgumentException(nameof(EndPosition), "EndPosition debe ser >= a StartPosition");
+                throw new ArgumentException(nameof(endPosition), "EndPosition debe ser >= a StartPosition");
+
+            TrimInputMode = trimInputMode;
+            LeftPadding = leftPadding;
+        }
+
+        public StringFieldAttribute(int fieldLength, TrimMode trimInputMode = TrimMode.NoTrim, bool leftPadding = false) : base(fieldLength)
+        {
+            if (fieldLength < 1)
+                throw new ArgumentException(nameof(fieldLength), $"{nameof(fieldLength)} debe ser mayor a 1");
 
             TrimInputMode = trimInputMode;
             LeftPadding = leftPadding;

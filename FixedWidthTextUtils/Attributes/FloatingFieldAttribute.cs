@@ -20,6 +20,15 @@ namespace FixedWidthTextUtils.Attributes
             FillLeftWithZero = fillLeftWithZeros;
         }
 
+        public FloatingFieldAttribute(int fieldLength, int decimalPositions, bool fillLeftWithZeros) : base(fieldLength)
+        {
+            if (decimalPositions < 0)
+                throw new ArgumentOutOfRangeException($"El valor de {nameof(decimalPositions)} debe ser un valor mayor o igual a 0");
+
+            DecimalPositions = decimalPositions;
+            FillLeftWithZero = fillLeftWithZeros;
+        }
+
         internal override void Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {
             int divisorDecimal = (int)Math.Pow(10, this.DecimalPositions);
