@@ -7,13 +7,10 @@ namespace FixedWidthTextUtils.Attributes
     {
         internal int StartPosition { get; set; }
         internal int EndPosition { get; set; }
-        internal int FieldLength { get; set; }
+        //internal int FieldLength { get; set; }
         internal bool IsOrdinalMode { get; set; }
 
-        protected int Length
-        {
-            get { return EndPosition - StartPosition + 1; }
-        }
+        internal int Length { get; set; }
 
         public FieldAttribute(int startPosition, int endPosition)
         {
@@ -25,12 +22,14 @@ namespace FixedWidthTextUtils.Attributes
 
             StartPosition = startPosition;
             EndPosition = endPosition;
+            Length = EndPosition - StartPosition + 1;
             IsOrdinalMode = false;
         }
 
         public FieldAttribute(int fieldLength)
         {
-            FieldLength = fieldLength;
+            Length = fieldLength;
+            //FieldLength = fieldLength;
             IsOrdinalMode = true;
         }
 

@@ -17,7 +17,7 @@ namespace FixedWidthTextUtils.Attributes
             FillLeftWithZero = fillLeftWithZero;
         }
 
-        public IntegerFieldAttribute(int fieldLenght, bool fillLeftWithZero) : base(fieldLenght)
+        public IntegerFieldAttribute(int fieldLength, bool fillLeftWithZero) : base(fieldLength)
         {
             FillLeftWithZero = fillLeftWithZero;
         }

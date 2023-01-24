@@ -24,7 +24,7 @@ namespace FixedWidthTextUtils.Attributes
             LeftPadding = leftPadding;
         }
 
-        public StringFieldAttribute(int fieldLength, TrimMode trimInputMode = TrimMode.NoTrim, bool leftPadding = false) : base(fieldLength)
+        public StringFieldAttribute(int fieldLength, TrimMode trimInputMode = TrimMode.Trim, bool leftPadding = false) : base(fieldLength)
         {
             if (fieldLength < 1)
                 throw new ArgumentException(nameof(fieldLength), $"{nameof(fieldLength)} debe ser mayor a 1");
@@ -61,7 +61,7 @@ namespace FixedWidthTextUtils.Attributes
             if (property.PropertyType != typeof(String) || property.PropertyType != typeof(string))
                 throw new SerializeFieldException($"La propiedad para la serializacion {property.Name} no es del tipo string");
 
-            string outputText = property.GetValue(originObject).ToString();
+            string outputText = (property.GetValue(originObject) ?? "").ToString();
             outputText = this.LeftPadding ? outputText.PadLeft(this.Length) : outputText.PadRight(this.Length);
             return outputText;
         }

@@ -1,11 +1,8 @@
-﻿using FixedWidthTextUtils.Attributes;
-using FixedWidthTextUtils.Exceptions;
+﻿using FixedWidthTextUtils.Exceptions;
 using Models.FixedWidthTextUtils;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Text;
 
 namespace FixedWidthTextUtils

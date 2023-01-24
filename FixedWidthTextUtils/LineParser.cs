@@ -35,6 +35,7 @@ namespace FixedWidthTextUtils
             string initializedLine = Utils.GetInitializedLine(value);
             int maxLineLength = initializedLine.Length;
             StringBuilder outputLine = new StringBuilder(initializedLine);
+            int ordinalModePositionCounter = 0;
 
             PropertyInfo[] properties = value.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -42,9 +43,25 @@ namespace FixedWidthTextUtils
             {
                 foreach (FieldAttribute fieldAttrib in property.GetCustomAttributes(typeof(FieldAttribute), true))
                 {
-                    if (fieldAttrib.EndPosition >= maxLineLength)
-                        throw new SerializeFieldException($"El largo de la linea declarado en el atributo Stringeable de la clase (de {maxLineLength} caracteres) es insuficiente " +
-                            $"para contener la serializacion de la propiedad {property.Name}. Extienda el tmaano de linea o revise la definicion de la propiedad.");
+
+                    if (fieldAttrib.IsOrdinalMode)
+                    {
+                        fieldAttrib.StartPosition = ordinalModePositionCounter;
+                        ordinalModePositionCounter += fieldAttrib.Length;
+                        fieldAttrib.EndPosition = ordinalModePositionCounter;
+
+                        if (fieldAttrib.EndPosition > maxLineLength)
+                            throw new SerializeFieldException($"El largo de la linea declarado en el atributo Stringeable de la clase (de {maxLineLength} caracteres) es insuficiente " +
+                                $"para contener la serializacion de la propiedad {property.Name}. Extienda el tamano de linea o revise la definicion de la propiedad.");
+                    }
+                    else
+                    {
+                        ordinalModePositionCounter = fieldAttrib.EndPosition;
+
+                        if (fieldAttrib.EndPosition >= maxLineLength)
+                            throw new SerializeFieldException($"El largo de la linea declarado en el atributo Stringeable de la clase (de {maxLineLength} caracteres) es insuficiente " +
+                                $"para contener la serializacion de la propiedad {property.Name}. Extienda el tamano de linea o revise la definicion de la propiedad.");
+                    }
 
                     string serializedField = fieldAttrib.ToPlainText(property, value);
                     outputLine = Utils.ReplaceAt(outputLine, fieldAttrib.StartPosition, serializedField);
@@ -66,13 +83,22 @@ namespace FixedWidthTextUtils
 
             foreach (PropertyInfo property in properties)
             {
+                if (property.Name == "NroClaveTributaria")
+                {
+                    int i = 22;  
+                }
+
                 foreach (FieldAttribute fieldAttrib in property.GetCustomAttributes(typeof(FieldAttribute), true))
                 {
+                    
+
                     if (fieldAttrib.IsOrdinalMode)
                     {
                         fieldAttrib.StartPosition = ordinalModePositionCounter;
-                        fieldAttrib.EndPosition = ordinalModePositionCounter + fieldAttrib.FieldLength - 1;
-                        ordinalModePositionCounter += fieldAttrib.FieldLength;
+                        //fieldAttrib.EndPosition = ordinalModePositionCounter + fieldAttrib.FieldLength - 1;
+                        fieldAttrib.EndPosition = ordinalModePositionCounter + fieldAttrib.Length - 1;
+                        //ordinalModePositionCounter += fieldAttrib.FieldLength;
+                        ordinalModePositionCounter += fieldAttrib.Length;
                     }
 
                     if (fieldAttrib.StartPosition > input.Length - 1)
