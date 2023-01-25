@@ -18,7 +18,7 @@ namespace FixedWidthTextUtils_NUnit_Test.Models
         [StringField(10, 29, StringFieldAttribute.TrimMode.Trim)]
         public string? Name { get; set; }
 
-        [StringField(30, 49)]
+        [StringField(30, 49, StringFieldAttribute.TrimMode.NoTrim)]
         public string? Street { get; set; }
 
         [IntegerField(50, 54, true)]

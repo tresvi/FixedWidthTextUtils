@@ -15,7 +15,7 @@ namespace FixedWidthTextUtils_NUnit_Test
         {
         }
 
-        [Test]
+  /*      [Test]
         public void Client_Throws_NonStringeable()
         {
             string inputLine = "012345678A20221229023";
@@ -28,7 +28,7 @@ namespace FixedWidthTextUtils_NUnit_Test
                 Assert.Throws<NonStringeableClassException>(() => fileConvert.Parse<Client_NonStringeable>(true));
             });
         }
-
+  */
         [Test]
         public void Client_Throws_NonStringeable2()
         {

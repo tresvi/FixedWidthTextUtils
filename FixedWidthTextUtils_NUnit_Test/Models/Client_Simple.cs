@@ -42,6 +42,8 @@ namespace FixedWidthTextUtils_NUnit_Test.Models
         [FloatingField(100, 102, 1, true)]
         public float WeightFloat { get; set; }
 
+        [StringField(103, 109)]
+        public string Filler { get; set; }
 
         public float PropertyParaNoSerailizar { get; set; }
         public static DateTime PropertyComputada { get { return DateTime.Now; } }

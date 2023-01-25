@@ -43,7 +43,6 @@ namespace FixedWidthTextUtils
             {
                 foreach (FieldAttribute fieldAttrib in property.GetCustomAttributes(typeof(FieldAttribute), true))
                 {
-
                     if (fieldAttrib.IsOrdinalMode)
                     {
                         fieldAttrib.StartPosition = ordinalModePositionCounter;
@@ -83,21 +82,12 @@ namespace FixedWidthTextUtils
 
             foreach (PropertyInfo property in properties)
             {
-                if (property.Name == "NroClaveTributaria")
-                {
-                    int i = 22;  
-                }
-
                 foreach (FieldAttribute fieldAttrib in property.GetCustomAttributes(typeof(FieldAttribute), true))
                 {
-                    
-
                     if (fieldAttrib.IsOrdinalMode)
                     {
                         fieldAttrib.StartPosition = ordinalModePositionCounter;
-                        //fieldAttrib.EndPosition = ordinalModePositionCounter + fieldAttrib.FieldLength - 1;
                         fieldAttrib.EndPosition = ordinalModePositionCounter + fieldAttrib.Length - 1;
-                        //ordinalModePositionCounter += fieldAttrib.FieldLength;
                         ordinalModePositionCounter += fieldAttrib.Length;
                     }
 

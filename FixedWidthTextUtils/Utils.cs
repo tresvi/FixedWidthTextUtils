@@ -14,16 +14,13 @@ namespace FixedWidthTextUtils
         {
             try
             {
-                List<Attribute> stringeableAttribs = value.GetType().GetCustomAttributes(typeof(StringeableClassAttribute)).ToList();
-                if (stringeableAttribs.Count == 0)
-                    throw new Exception($"La clase {value.GetType().Name} no fue decorada como {typeof(StringeableClassAttribute).Name}");
+                int lineLength = Utils.GetLineLength(value);
 
-                StringeableClassAttribute stringeable = (StringeableClassAttribute)stringeableAttribs.First();
-                return new string(stringeable.FillerChar, stringeable.RegisterLineLength);
+                return new string(' ', lineLength);
             }
             catch (Exception ex)
             {
-                throw new NonStringeableClassException($"Error al determinar la longitud de linea y el caracter de relleno" +
+                throw new NonStringeableClassException($"Error al determinar la longitud de linea de la clase serializada" +
                     $" de la clase  {value.GetType().Name}. {ex.Message}", ex);
             }
         }
@@ -33,12 +30,59 @@ namespace FixedWidthTextUtils
         {
             try
             {
+                PropertyInfo[] properties = value.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+                bool existsOrdinalsFields = false;
+                bool existsPositionalFields = false;
+
+                foreach (PropertyInfo property in properties)
+                {
+                    foreach (FieldAttribute fieldAttrib in property.GetCustomAttributes(typeof(FieldAttribute), true))
+                    {
+                        if (fieldAttrib.IsOrdinalMode) existsOrdinalsFields = true;
+                        if (fieldAttrib.IsOrdinalMode == false) existsPositionalFields = true;
+                    }
+                }
+
+                if (existsOrdinalsFields && existsPositionalFields)
+                {
+                    throw new NonStringeableClassException($"La clase {value.GetType().Name} no fue decorada con constructores de Campo para lectura posicional y ordinal. Ambos no pueden mezclarse dentro de la misma clase, debe usar solo los de un tipo u otro ");
+                }
+
+                int maxEndPosition = 0;
+
+
+                if (existsOrdinalsFields)
+                {
+                    foreach (PropertyInfo property in properties)
+                    {
+                        foreach (FieldAttribute fieldAttrib in property.GetCustomAttributes(typeof(FieldAttribute), true))
+                        {
+                            maxEndPosition += fieldAttrib.Length;
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (PropertyInfo property in properties)
+                    {
+                        foreach (FieldAttribute fieldAttrib in property.GetCustomAttributes(typeof(FieldAttribute), true))
+                        {
+                            if (fieldAttrib.EndPosition > maxEndPosition) maxEndPosition = fieldAttrib.EndPosition;
+                        }
+                    }
+                    maxEndPosition += 1;
+                }
+
+                return maxEndPosition;
+                /* Original
                 List<Attribute> stringeableAttribs = value.GetType().GetCustomAttributes(typeof(StringeableClassAttribute)).ToList();
                 if (stringeableAttribs.Count == 0)
                     throw new Exception($"La clase {value.GetType().Name} no fue decorada como {typeof(StringeableClassAttribute).Name}");
 
                 StringeableClassAttribute stringeable = (StringeableClassAttribute)stringeableAttribs.First();
                 return stringeable.RegisterLineLength;
+                */
             }
             catch (Exception ex)
             {
