@@ -12,7 +12,7 @@ namespace FixedWidthTextUtils.Attributes
         public bool LeftPadding { get; set; }
 
 
-        public StringFieldAttribute(int startPosition, int endPosition, TrimMode trimInputMode = TrimMode.NoTrim, bool leftPadding = false) : base(startPosition, endPosition)
+        public StringFieldAttribute(int startPosition, int endPosition, TrimMode trimInputMode = TrimMode.TrimEnd, bool leftPadding = false) : base(startPosition, endPosition)
         {
             if (startPosition < 0)
                 throw new ArgumentException(nameof(startPosition), "StartPosition debe ser >= 0");
@@ -24,7 +24,7 @@ namespace FixedWidthTextUtils.Attributes
             LeftPadding = leftPadding;
         }
 
-        public StringFieldAttribute(int fieldLength, TrimMode trimInputMode = TrimMode.Trim, bool leftPadding = false) : base(fieldLength)
+        public StringFieldAttribute(int fieldLength, TrimMode trimInputMode = TrimMode.TrimEnd, bool leftPadding = false) : base(fieldLength)
         {
             if (fieldLength < 1)
                 throw new ArgumentException(nameof(fieldLength), $"{nameof(fieldLength)} debe ser mayor a 1");
