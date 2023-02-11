@@ -22,7 +22,7 @@ namespace FixedWidthTextUtils_NUnit_Test.Models
         public string? Street { get; set; }
 
         [IntegerField(50, 54, true)]
-        public int HouseNumber { get; set; }
+        public int? HouseNumber { get; set; }
 
         [StringField(55, 59, StringFieldAttribute.TrimMode.TrimStart, true)]
         public string PostCode { get; set; } = default!;
@@ -40,16 +40,16 @@ namespace FixedWidthTextUtils_NUnit_Test.Models
         public int HeigthInCentimeters { get; set; }
 
         [FloatingField(100, 102, 1, true)]
-        public float WeightFloat { get; set; }
+        public float? WeightFloat { get; set; }
 
         [FloatingField(103, 105, 1, true )]
-        public Single WeightSingle { get; set; }
+        public Single? WeightSingle { get; set; }
 
         [FloatingField(106, 108, 1, true)]
-        public Double WeightDouble { get; set; }
+        public Double? WeightDouble { get; set; }
 
         [FloatingField(109, 111, 1, true)]
-        public Decimal WeightDecimal { get; set; }
+        public Decimal? WeightDecimal { get; set; }
         
         [DateTimeField(112, 125, "yyyyMMddHHmmss")]
         public DateTime AnotherDateTime { get; set; }

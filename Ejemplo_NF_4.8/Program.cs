@@ -14,6 +14,9 @@ namespace Ejemplo_NF_4._8
 
             try
             {
+                int a = 12;
+
+
                 //Cliente parsedClient = LineParser.Parse<Cliente>(inputLine);
                 ClienteOrdinal parsedClient = LineParser.Parse<ClienteOrdinal>(inputLine);
                 PrintObject(parsedClient);

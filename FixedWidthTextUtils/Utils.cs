@@ -44,10 +44,11 @@ namespace FixedWidthTextUtils
                     }
                 }
 
-                if (existsOrdinalsFields && existsPositionalFields)
-                {
-                    throw new NonStringeableClassException($"La clase {value.GetType().Name} no fue decorada con constructores de Campo para lectura posicional y ordinal. Ambos no pueden mezclarse dentro de la misma clase, debe usar solo los de un tipo u otro ");
-                }
+                //!!! Ver que se hace con esto
+                //if (existsOrdinalsFields && existsPositionalFields)
+                //{
+                //    throw new NonStringeableClassException($"La clase {value.GetType().Name} no fue decorada con constructores de Campo para lectura posicional y ordinal. Ambos no pueden mezclarse dentro de la misma clase, debe usar solo los de un tipo u otro ");
+                //}
 
                 int maxEndPosition = 0;
 

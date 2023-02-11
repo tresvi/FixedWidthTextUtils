@@ -137,9 +137,6 @@ namespace FixedWidthTextUtils_NUnit
 
 
         //TODO: Metodos de prueba de:
-        //Agregar properties  char, uchar y verlo fallar
         //-TryParse
-        //-Todas las exceptiones custom de Parse().
-        //-Todas las exceptiones custom de ToFlatLine2().
     }
 }

@@ -43,7 +43,6 @@ namespace FixedWidthTextUtils_NUnit_Test
 
                 parseFieldException = Assert.Throws<ParseFieldException>(() => LineParser.Parse<Client_With_Priv_Method>("012345678A202A1229023"));
                 Assert.That(parseFieldException?.Message, Does.Contain("fecha"));
-
             });
         }
 

@@ -6,7 +6,7 @@ using System.Reflection;
 namespace FixedWidthTextUtils.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
-    public sealed class DateTimeFieldAttribute : FieldAttribute
+    public class DateTimeFieldAttribute : FieldAttribute
     {
         public string Format { get; set; }
         public bool PadToRight { get; set; }

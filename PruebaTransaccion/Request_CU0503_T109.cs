@@ -2,11 +2,12 @@
 
 namespace PruebaTransaccion
 {
-    [StringeableClass(711, ' ')]
-    public class Request_CU1028_T109
+    /// <summary>
+    /// Alta Clientes Fisicos
+    /// </summary>
+    //[StringeableClass(753, ' ')]
+    internal class Request_CU0503_T109
     {
-        //public string CodigoTransaccion { get; set; }       //Código de transacción(A4) - 1028 - Simple – CU0780NS
-
         [StringField(55)]
         public string Header { get; set; }
 
@@ -23,7 +24,7 @@ namespace PruebaTransaccion
         public string TipoDocumento { get; set; }
 
         [IntegerField(8, true)]
-        public int NroDocumento { get; set; }
+        public long NroDocumento { get; set; }
 
         [StringField(3)]
         public string VersionDocumento { get; set; }
@@ -43,7 +44,7 @@ namespace PruebaTransaccion
         [StringField(2)]
         public string Nacionalidad { get; set; }
 
-        [IntegerField(8, true)]
+        [DateTimeField(8, "yyyyMMdd")]
         public DateTime FechaNacimiento { get; set; }
 
         [StringField(3)]
@@ -52,7 +53,7 @@ namespace PruebaTransaccion
         [IntegerField(4, true)]
         public int CasaBCRA { get; set; }
 
-        [BooleanField(1, "S","N")]
+        [BooleanField(1, "S", "N")]
         public bool IndicadorDeEmpleado { get; set; }
 
         [StringField(3)]
@@ -81,6 +82,7 @@ namespace PruebaTransaccion
 
         [StringField(2)]
         public string CarpetaCredito_Ramo { get; set; }
+
         [IntegerField(7, true)]
         public int CarpetaCredito_Numero { get; set; }
 
@@ -95,12 +97,6 @@ namespace PruebaTransaccion
 
         [DateTimeField(8, "yyyyMMdd")]
         public DateTime FechaAltaCliente { get; set; }
-
-        [DateTimeField(8, "yyyyMMdd")]
-        public DateTime FechaBajaCliente { get; set; }
-
-        [DateTimeField(8, "yyyyMMdd")]
-        public DateTime FechaDeAcceso { get; set; }
 
         [StringField(30)]
         public string Calle { get; set; }
@@ -138,15 +134,6 @@ namespace PruebaTransaccion
         [StringField(70)]
         public string Email { get; set; }
 
-        [IntegerField(8,true)]
-        public long NroIdent { get; set; }
-
-        [StringField(30)]
-        public string CasillaPostalExterior { get; set; }
-
-        [StringField(10)]
-        public string CodigoPostalExterior { get; set; }
-
         [DateTimeField(8, "yyyyMMdd")]
         public DateTime FechaVencimientoDoc { get; set; }
 
@@ -156,26 +143,41 @@ namespace PruebaTransaccion
         [StringField(2)]
         public string SegundaNacionalidad { get; set; }
 
+        [StringField(30)]
+        public string CasillaPostalExterior { get; set; }
+
+        [StringField(10)]
+        public string CodigoPostalExterior { get; set; }
+
+        [StringField(60)]
+        public string NombreConyuge { get; set; }
+
         [BooleanField(2, "SI", "NO")]
-        public string MarcaPEP { get; set; }
+        public bool MarcaPEP { get; set; }
+
+        [StringField(2)]
+        public string PaisResidFiscalExterior { get; set; }
 
         [IntegerField(15, true)]
         public long ValorDeclarIngresosAnuales { get; set; }
 
+        [StringField(25)]
+        public string TIN { get; set; }
+
+        [IntegerField(4, true)]
+        public int MotivoNoInfTIN { get; set; }
+
         [StringField(4)]
-        public long MarcaSujetoObligado { get; set; }
+        public string MarcaSujetoObligado { get; set; }
+
+        [StringField(2)]
+        public string PaisEmisorTIN { get; set; }
 
         [BooleanField(1, "S", "N")]
-        public long AdminFondos3ros { get; set; }
+        public bool AdminFondos3ros { get; set; }
 
         [IntegerField(15, true)]
         public long ValorMensualEstimaOperar { get; set; }
-
-        [StringField(2)]
-        public long PaisResiFiscalEnExterior { get; set; }
-
-        [StringField(25)]
-        public long TIN { get; set; }
 
         [StringField(30)]
         public string Barrio { get; set; }

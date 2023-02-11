@@ -20,7 +20,7 @@ namespace PruebaTransaccion
         public int TipoClaveTributaria { get; set; }
         
         [IntegerField(11, true)]
-        public int NroClaveTributaria { get; set; }
+        public long NroClaveTributaria { get; set; }
 
         public string TipoDocumento { get; set; }
 
@@ -37,7 +37,7 @@ namespace PruebaTransaccion
         public string Nacionalidad { get; set; }
         public DateTime FechaNacimiento { get; set; }
         public string IndicEmancipadoAutorizado { get; set; }
-        public int CasaBera { get; set; }
+        public int CasaBCRA { get; set; }
         public string IndicadorDeEmpleado { get; set; }
         public string PosicionIva { get; set; }
         public string BonificacionIva { get; set; }
