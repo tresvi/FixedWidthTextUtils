@@ -32,33 +32,34 @@ namespace FixedWidthTextUtils.Attributes
         }
 
 
-        internal override void Parse(PropertyInfo property, object targetObject, string rawFieldContent)
+        internal override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {
             int divisorDecimal = (int)Math.Pow(10, this.DecimalPositions);
 
             if (!long.TryParse(rawFieldContent, out long valorEntero))
                 throw new ParseFieldException($"El valor {rawFieldContent} no puede ser reconocido como numerico");
 
+            object result;
+
             if (property.PropertyType == typeof(float) || property.PropertyType == typeof(float?))
             {
-                float valorTemp = (float)valorEntero / divisorDecimal;
-                property.SetValue(targetObject, valorTemp);
+                result = (float)valorEntero / divisorDecimal;
             }
             else if (property.PropertyType == typeof(double) || property.PropertyType == typeof(double?))
             {
-                double valorTemp = (double)valorEntero / divisorDecimal;
-                property.SetValue(targetObject, valorTemp);
+                result = (double)valorEntero / divisorDecimal;
             }
             else if (property.PropertyType == typeof(decimal) || property.PropertyType == typeof(decimal?))
             {
-                decimal valorTemp = (decimal)valorEntero / divisorDecimal;
-                property.SetValue(targetObject, valorTemp);
+                result = (decimal)valorEntero / divisorDecimal;
             }
             else
             {
                 throw new ParseFieldException($"La property {targetObject.GetType().Name}.{property.Name} es del tipo " +
                     $" {property.PropertyType.Name} el cual no es un destino soportado para un número de punto flotante");
             }
+
+            return result;
         }
 
 

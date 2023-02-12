@@ -25,7 +25,7 @@ namespace FixedWidthTextUtils.Attributes
             FillLeftWithZero = fillLeftWithZero;
         }
 
-        internal override void Parse(PropertyInfo property, object targetObject, string rawFieldContent)
+        internal override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {
             //Reviso si la asignacion se hace a alguna property de algun tipo entero
             string parseErrorMessage = $"El valor \"{rawFieldContent}\" no puede ser reconocido como un entero válido del tipo {property.PropertyType.Name} " +
@@ -36,56 +36,56 @@ namespace FixedWidthTextUtils.Attributes
                 if (!byte.TryParse(rawFieldContent, out byte parsedValue))
                     throw new ParseFieldException(parseErrorMessage);
 
-                property.SetValue(targetObject, parsedValue);
+                return parsedValue;
             }
             else if (property.PropertyType == typeof(sbyte) || property.PropertyType == typeof(sbyte?))
             {
                 if (!sbyte.TryParse(rawFieldContent, out sbyte parsedValue))
                     throw new ParseFieldException(parseErrorMessage);
 
-                property.SetValue(targetObject, parsedValue);
+                return parsedValue;
             }
             else if (property.PropertyType == typeof(short) || property.PropertyType == typeof(short?))
             {
                 if (!short.TryParse(rawFieldContent, out short parsedValue))
                     throw new ParseFieldException(parseErrorMessage);
 
-                property.SetValue(targetObject, parsedValue);
+                return parsedValue;
             }
             else if (property.PropertyType == typeof(ushort) || property.PropertyType == typeof(ushort?))
             {
-                if (!ushort.TryParse(rawFieldContent, out ushort valorTemp))
+                if (!ushort.TryParse(rawFieldContent, out ushort parsedValue))
                     throw new ParseFieldException(parseErrorMessage);
 
-                property.SetValue(targetObject, valorTemp);
+                return parsedValue;
             }
             else if (property.PropertyType == typeof(int) || property.PropertyType == typeof(int?))
             {
                 if (!int.TryParse(rawFieldContent, out int parsedValue))
                     throw new ParseFieldException(parseErrorMessage);
 
-                property.SetValue(targetObject, parsedValue);
+                return parsedValue;
             }
             else if (property.PropertyType == typeof(uint) || property.PropertyType == typeof(uint?))
             {
-                if (!uint.TryParse(rawFieldContent, out uint valorTemp))
+                if (!uint.TryParse(rawFieldContent, out uint parsedValue))
                     throw new ParseFieldException(parseErrorMessage);
 
-                property.SetValue(targetObject, valorTemp);
+                return parsedValue;
             }
             else if (property.PropertyType == typeof(long) || property.PropertyType == typeof(long?))
             {
-                if (!long.TryParse(rawFieldContent, out long valorTemp))
+                if (!long.TryParse(rawFieldContent, out long parsedValue))
                     throw new ParseFieldException(parseErrorMessage);
 
-                property.SetValue(targetObject, valorTemp);
+                return parsedValue;
             }
             else if (property.PropertyType == typeof(ulong) || property.PropertyType == typeof(ulong?))
             {
-                if (!ulong.TryParse(rawFieldContent, out ulong valorTemp))
+                if (!ulong.TryParse(rawFieldContent, out ulong parsedValue))
                     throw new ParseFieldException(parseErrorMessage);
 
-                property.SetValue(targetObject, valorTemp);
+                return parsedValue;
             }
             else
             {

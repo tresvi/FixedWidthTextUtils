@@ -43,7 +43,7 @@ namespace FixedWidthTextUtils_NUnit_Test.Models
         public float WeightFloat { get; set; }
 
         [StringField(7)]
-        public string Filler { get; set; }
+        public string? Filler { get; set; }
 
 
         public override string ToString()

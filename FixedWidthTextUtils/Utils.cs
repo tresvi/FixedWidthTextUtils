@@ -33,14 +33,14 @@ namespace FixedWidthTextUtils
                 PropertyInfo[] properties = value.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
                 bool existsOrdinalsFields = false;
-                bool existsPositionalFields = false;
+                //bool existsPositionalFields = false;
 
                 foreach (PropertyInfo property in properties)
                 {
                     foreach (FieldAttribute fieldAttrib in property.GetCustomAttributes(typeof(FieldAttribute), true))
                     {
                         if (fieldAttrib.IsOrdinalMode) existsOrdinalsFields = true;
-                        if (fieldAttrib.IsOrdinalMode == false) existsPositionalFields = true;
+                        //if (fieldAttrib.IsOrdinalMode == false) existsPositionalFields = true;
                     }
                 }
 

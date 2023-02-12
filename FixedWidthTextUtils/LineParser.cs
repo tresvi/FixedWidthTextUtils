@@ -101,7 +101,8 @@ namespace FixedWidthTextUtils
 
                     string rawFieldContent = input.Substring(fieldAttrib.StartPosition, Math.Min((fieldAttrib.EndPosition - fieldAttrib.StartPosition + 1), input.Length - fieldAttrib.StartPosition));
 
-                    fieldAttrib.Parse(property, targetObject, rawFieldContent);
+                    object result = fieldAttrib.Parse(property, targetObject, rawFieldContent);
+                    property.SetValue(targetObject, result);
                 }
             }
             return targetObject;

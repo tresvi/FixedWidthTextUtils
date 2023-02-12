@@ -31,7 +31,7 @@ namespace FixedWidthTextUtils.Attributes
             LeftPadding = leftPadding;
         }
 
-        internal override void Parse(PropertyInfo property, object targetObject, string rawFieldContent)
+        internal override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {
             if (property.PropertyType != typeof(DateTime))
                 throw new ParseFieldException($"La propiedad de asignacion {property.Name} no es del tipo DateTime");
@@ -43,7 +43,7 @@ namespace FixedWidthTextUtils.Attributes
             if (!parseOK)
                 throw new ParseFieldException($"El valor \"{rawFieldContent}\" no puede ser interpretado como fecha según el formato \"{this.Format}\"  de la propiedad {property.Name}");
 
-            property.SetValue(targetObject, fechaTemp);
+            return fechaTemp;
         }
 
 

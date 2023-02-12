@@ -34,7 +34,7 @@ namespace FixedWidthTextUtils.Attributes
         }
 
 
-        internal override void Parse(PropertyInfo property, object targetObject, string rawFieldContent)
+        internal override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {
             if (property.PropertyType != typeof(String) || property.PropertyType != typeof(string))
                 throw new ParseFieldException($"La propiedad de asignacion {property.Name} no es del tipo string");
@@ -52,7 +52,7 @@ namespace FixedWidthTextUtils.Attributes
                     break;
             }
 
-            property.SetValue(targetObject, rawFieldContent);
+            return rawFieldContent;
         }
 
 
