@@ -33,7 +33,7 @@ namespace FixedWidthTextUtils.Attributes
             IsOrdinalMode = true;
         }
 
-        internal abstract void Parse(PropertyInfo property, object targetObject, string rawFieldContent);
+        internal abstract object Parse(PropertyInfo property, object targetObject, string rawFieldContent);
         internal abstract string ToPlainText(PropertyInfo property, object originObject);
 
     }

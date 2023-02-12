@@ -21,7 +21,7 @@ namespace FixedWidthTextUtils.Attributes
         }
 
 
-        internal override void Parse(PropertyInfo property, object targetObject, string rawFieldContent)
+        internal override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {
             bool typeAllowed = property.PropertyType == typeof(float?) 
                             || property.PropertyType == typeof(double?) 
@@ -31,12 +31,10 @@ namespace FixedWidthTextUtils.Attributes
                 throw new ParseFieldException($"La property {targetObject.GetType().Name}.{property.Name} es de tipo {property.PropertyType.Name} " +
                     $"el cual no es un destino soportado como un número de punto flotante Nullable");
 
-            if (rawFieldContent == this.TextForNull)
-            {
-                property.SetValue(targetObject, null);
-                return;
-            }
-            base.Parse(property, targetObject, rawFieldContent);
+            if (rawFieldContent == this.TextForNull) 
+                return null;
+            else
+                return base.Parse(property, targetObject, rawFieldContent);
         }
 
 

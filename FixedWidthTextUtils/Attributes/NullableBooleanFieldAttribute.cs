@@ -23,7 +23,7 @@ namespace FixedWidthTextUtils.Attributes
             TextForNull = textForNull;
         }
 
-        internal override void Parse(PropertyInfo property, object targetObject, string rawFieldContent)
+        internal override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {
             if (property.PropertyType != typeof(bool?))
                 throw new ParseFieldException($"La propiedad de asignacion \"{targetObject.GetType().Name}" +
@@ -50,7 +50,7 @@ namespace FixedWidthTextUtils.Attributes
                 }
             }
 
-            property.SetValue(targetObject, value);
+            return value;
         }
 
 

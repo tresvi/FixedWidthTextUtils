@@ -5,7 +5,7 @@ using System.Reflection;
 namespace FixedWidthTextUtils.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
-    public class BooleanFieldAttribute : FieldAttribute
+    public class BooleanFieldAttribute: FieldAttribute
     {
         public string TextForTrue  { get; set; }
         public string TextForFalse { get; set; }
@@ -53,7 +53,7 @@ namespace FixedWidthTextUtils.Attributes
             this.TextForFalse = textForFalse;
         }
 
-        internal override void Parse(PropertyInfo property, object targetObject, string rawFieldContent)
+        internal override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {
             if (property.PropertyType != typeof(bool))
                 throw new ParseFieldException($"La propiedad de asignacion \"{property.Name}\" no es del tipo bool");
@@ -73,8 +73,8 @@ namespace FixedWidthTextUtils.Attributes
                     throw new ParseFieldException($"El valor \"{rawFieldContent}\" no puede ser reconocido como un booleano válido para " +
                         $"ser asignado a la property \"{property.Name}\". Verifique que el dato coincida con los valores definidos para la property");
             }
- 
-            property.SetValue(targetObject, value);
+
+            return value;
         }
 
 

@@ -21,7 +21,7 @@ namespace FixedWidthTextUtils.Attributes
         }
 
 
-        internal override void Parse(PropertyInfo property, object targetObject, string rawFieldContent)
+        internal override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {
             bool typeAllowed = property.PropertyType == typeof(byte?)
                 || property.PropertyType == typeof(sbyte?)
@@ -37,11 +37,9 @@ namespace FixedWidthTextUtils.Attributes
                     $"el cual no es un destino soportado para un número de punto flotante Nullable");
 
             if (rawFieldContent == this.TextForNull)
-            {
-                property.SetValue(targetObject, null);
-                return;
-            }
-            base.Parse(property, targetObject, rawFieldContent);
+                return null;
+            else
+                return base.Parse(property, targetObject, rawFieldContent);
         }
 
 
