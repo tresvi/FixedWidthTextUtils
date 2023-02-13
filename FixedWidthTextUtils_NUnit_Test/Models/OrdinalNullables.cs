@@ -1,4 +1,5 @@
 ﻿using FixedWidthTextUtils.Attributes;
+using System;
 
 namespace FixedWidthTextUtils_NUnit_Test.Models
 {
@@ -21,6 +22,12 @@ namespace FixedWidthTextUtils_NUnit_Test.Models
 
         [NullableIntegerField(4, true, "    ")]
         public long? IntegerNotNull { get; set; }
+
+        [NullableDateTimeField(8, "ddMMyyyy", "        ")]
+        public DateTime? DateTimeNull { get; set; }
+
+        [NullableDateTimeField(8, "ddMMyyyy", "        ")]
+        public DateTime? DateTimeNotNull { get; set; }
 
     }
 }

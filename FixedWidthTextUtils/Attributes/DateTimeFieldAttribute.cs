@@ -31,10 +31,29 @@ namespace FixedWidthTextUtils.Attributes
             LeftPadding = leftPadding;
         }
 
-        internal override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
+
+        public override bool ValidateFieldDefinition(PropertyInfo property, object originObject, out string errorMesage)
         {
-            if (property.PropertyType != typeof(DateTime))
-                throw new ParseFieldException($"La propiedad de asignacion {property.Name} no es del tipo DateTime");
+            if (this.Length != this.Format.Length)
+            {
+                errorMesage = $"La longitud definida en el parametro \"{nameof(Format)}\" del attribute ({this.Format.Length} " +
+                    $"caracteres) debe coincidir con la longitud definida para este campo ({this.Length} caracteres)";
+                return false;
+            }
+
+            errorMesage = "";
+            return true;
+        }
+
+
+        public override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
+        {
+            bool isValidType = property.PropertyType == typeof(DateTime)
+                            || property.PropertyType == typeof(DateTime?);
+
+            if (!isValidType)
+                throw new ParseFieldException($"La property {targetObject.GetType().Name}.{property.Name} es de tipo " +
+                    $"{property.PropertyType.Name} el cual no es un destino soportado para un {typeof(DateTime?).Name}");
 
             rawFieldContent = rawFieldContent.Trim();
 
@@ -47,10 +66,10 @@ namespace FixedWidthTextUtils.Attributes
         }
 
 
-        internal override string ToPlainText(PropertyInfo property, object originObject)
+        public override string ToText(PropertyInfo property, object originObject)
         {
-            if (property.PropertyType != typeof(DateTime))
-                throw new SerializeFieldException($"La propiedad para la serializacion {property.Name} no es del tipo DateTime");
+            if (property.PropertyType != typeof(DateTime) && property.PropertyType != typeof(DateTime?))
+                throw new SerializeFieldException($"La propiedad para la serializacion \"{originObject.GetType().Name}.{property.Name}\" no es del tipo DateTime");
 
             DateTime DateTemp = (DateTime)property.GetValue(originObject);
 

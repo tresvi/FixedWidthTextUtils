@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace FixedWidthTextUtils.Attributes
 {
-    public class NullableIntegerFieldAttribute : IntegerFieldAttribute
+    public sealed class NullableIntegerFieldAttribute : IntegerFieldAttribute
     {
         private string TextForNull { get; set; }
 
@@ -21,9 +21,22 @@ namespace FixedWidthTextUtils.Attributes
         }
 
 
-        internal override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
+        public override bool ValidateFieldDefinition(PropertyInfo property, object originObject, out string errorMesage)
         {
-            bool typeAllowed = property.PropertyType == typeof(byte?)
+            if (this.Length != this.TextForNull.Length)
+            {
+                errorMesage = $"La longitud definida en el parametro \"{nameof(TextForNull)}\" del attribute ({this.TextForNull.Length} " +
+                    $"caracteres) debe coincidir con la longitud definida para este campo ({this.Length} caracteres)";
+                return false;
+            }
+
+            return base.ValidateFieldDefinition(property, originObject, out errorMesage);
+        }
+
+
+        public override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
+        {
+            bool isValidType = property.PropertyType == typeof(byte?)
                 || property.PropertyType == typeof(sbyte?)
                 || property.PropertyType == typeof(short?)
                 || property.PropertyType == typeof(ushort?)
@@ -32,9 +45,9 @@ namespace FixedWidthTextUtils.Attributes
                 || property.PropertyType == typeof(long?)
                 || property.PropertyType == typeof(ulong?);
 
-            if (!typeAllowed)
-                throw new ParseFieldException($"La property {property.Name} es de tipo {property.PropertyType.Name} " +
-                    $"el cual no es un destino soportado para un número de punto flotante Nullable");
+            if (!isValidType)
+                throw new ParseFieldException($"La property {targetObject.GetType().Name}.{property.Name} es de tipo " +
+                    $"{property.PropertyType.Name} el cual no es un destino soportado para un número de Entero");
 
             if (rawFieldContent == this.TextForNull)
                 return null;
@@ -43,12 +56,11 @@ namespace FixedWidthTextUtils.Attributes
         }
 
 
-        internal override string ToPlainText(PropertyInfo property, object originObject)
+        public override string ToText(PropertyInfo property, object originObject)
         {
-            if (property.GetValue(originObject) == null)
-                return this.TextForNull;
+            if (property.GetValue(originObject) == null) return this.TextForNull;
 
-            return base.ToPlainText(property, originObject);
+            return base.ToText(property, originObject);
         }
 
     }

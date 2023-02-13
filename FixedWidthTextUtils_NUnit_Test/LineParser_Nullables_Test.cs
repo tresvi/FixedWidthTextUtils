@@ -2,6 +2,7 @@
 using FixedWidthTextUtils.Exceptions;
 using FixedWidthTextUtils_NUnit_Test.Models;
 using NUnit.Framework;
+using System;
 
 namespace FixedWidthTextUtils_NUnit_Test
 {
@@ -11,7 +12,7 @@ namespace FixedWidthTextUtils_NUnit_Test
 
         //TODO: Agregar test de ida y vuelta
 
-        [TestCase("SINO  HELLO    1234")]
+        [TestCase("SINO  HELLO    1234        30122023")]
         public void Parse_NullableBoolean_OK(string inputLine)
         {
             //arrange
@@ -26,6 +27,8 @@ namespace FixedWidthTextUtils_NUnit_Test
             Assert.AreEqual("HELLO", parsedObject.SimpleString);
             Assert.AreEqual(null, parsedObject.IntegerNull);
             Assert.AreEqual(1234, parsedObject.IntegerNotNull);
+            Assert.AreEqual(null , parsedObject.DateTimeNull);
+            Assert.AreEqual(new DateTime(2023, 12, 30), parsedObject.DateTimeNotNull);
         }
 
 
@@ -103,5 +106,33 @@ namespace FixedWidthTextUtils_NUnit_Test
             Assert.That(3.45d, Is.EqualTo(parsedObject.DecimalNotNull).Within(tolerance));
         }
 
+        [TestCase(1, "SINO  HELLO    1234        30122023")]
+        [TestCase(2, "  01  02  03  04  05  06  07  08")]
+        //[TestCase(3, "    0123    0234    0345    XXXXX")]
+        public void ToTextLine_InputString_ReturnString(int testCase, string inputLine)
+        {
+            //arrange
+            string outputLine = "";
+
+            //act
+            if (testCase == 1)
+            {
+                OrdinalNullables ordinalNullable = LineParser.Parse<OrdinalNullables>(inputLine);
+                outputLine = LineParser.ToTextLine(ordinalNullable);
+            }
+            else if (testCase == 2)
+            {
+                IntegerOrdinalNullables integreOrdinalNullable = LineParser.Parse<IntegerOrdinalNullables>(inputLine);
+                outputLine = LineParser.ToTextLine(integreOrdinalNullable);
+            }
+            else if (testCase == 3)
+            { 
+                FloatingOrdinalNullables floatinOrdinalNullable = LineParser.Parse<FloatingOrdinalNullables>(inputLine);
+                outputLine = LineParser.ToTextLine(floatinOrdinalNullable);
+            }
+
+            //assert
+            Assert.AreEqual(inputLine, outputLine);
+        }
     }
 }
