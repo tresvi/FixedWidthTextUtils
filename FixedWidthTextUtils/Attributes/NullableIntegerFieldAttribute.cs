@@ -7,14 +7,14 @@ namespace FixedWidthTextUtils.Attributes
     {
         private string TextForNull { get; set; }
 
-        public NullableIntegerFieldAttribute(int startPosition, int endPosition, bool fillLeftWithZero, string textForNull) 
+        public NullableIntegerFieldAttribute(int startPosition, int endPosition, string textForNull, bool fillLeftWithZero = true) 
             : base(startPosition, endPosition, fillLeftWithZero)
         {
             this.TextForNull = textForNull;
         }
 
 
-        public NullableIntegerFieldAttribute(int fieldLength, bool fillLeftWithZero, string textForNull) 
+        public NullableIntegerFieldAttribute(int fieldLength, string textForNull, bool fillLeftWithZero = true) 
             : base(fieldLength, fillLeftWithZero)
         {
             this.TextForNull = textForNull;

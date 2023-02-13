@@ -13,13 +13,13 @@ namespace FixedWidthTextUtils.Attributes
     {
         internal bool FillLeftWithZero { get; set; }
 
-        public IntegerFieldAttribute(int startPosition, int endPosition, bool fillLeftWithZero) 
+        public IntegerFieldAttribute(int startPosition, int endPosition, bool fillLeftWithZero = true) 
             : base(startPosition, endPosition)
         {
             FillLeftWithZero = fillLeftWithZero;
         }
 
-        public IntegerFieldAttribute(int fieldLength, bool fillLeftWithZero) 
+        public IntegerFieldAttribute(int fieldLength, bool fillLeftWithZero = true) 
             : base(fieldLength)
         {
             FillLeftWithZero = fillLeftWithZero;

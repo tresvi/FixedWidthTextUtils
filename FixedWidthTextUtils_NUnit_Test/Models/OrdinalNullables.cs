@@ -17,10 +17,10 @@ namespace FixedWidthTextUtils_NUnit_Test.Models
         [StringField(5)]
         public string? SimpleString { get; set; }
 
-        [NullableIntegerField(4, true, "    ")]
+        [NullableIntegerField(4, "    ", true)]
         public long? IntegerNull { get; set; }
 
-        [NullableIntegerField(4, true, "    ")]
+        [NullableIntegerField(4, "    ", true)]
         public long? IntegerNotNull { get; set; }
 
         [NullableDateTimeField(8, "ddMMyyyy", "        ")]

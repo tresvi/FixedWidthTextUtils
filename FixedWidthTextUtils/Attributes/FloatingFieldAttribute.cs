@@ -11,7 +11,7 @@ namespace FixedWidthTextUtils.Attributes
         internal int DecimalPositions { get; set; }
         internal bool FillLeftWithZero { get; set; }
 
-        public FloatingFieldAttribute(int startPosition, int endPosition, int decimalPositions, bool fillLeftWithZeros) 
+        public FloatingFieldAttribute(int startPosition, int endPosition, int decimalPositions, bool fillLeftWithZeros = true) 
             : base(startPosition, endPosition)
         {
             if (decimalPositions < 0)
@@ -21,7 +21,7 @@ namespace FixedWidthTextUtils.Attributes
             FillLeftWithZero = fillLeftWithZeros;
         }
 
-        public FloatingFieldAttribute(int fieldLength, int decimalPositions, bool fillLeftWithZeros) 
+        public FloatingFieldAttribute(int fieldLength, int decimalPositions, bool fillLeftWithZeros = true) 
             : base(fieldLength)
         {
             if (decimalPositions < 0)
