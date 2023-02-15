@@ -103,5 +103,25 @@ namespace FixedWidthTextUtils_NUnit_Test
             Assert.That(3.45d, Is.EqualTo(parsedObject.DecimalNotNull).Within(tolerance));
         }
 
+
+        [TestCase("    0123    0234    0345    XXXXX")]
+        public void Parse_FloatingNullablesSon_OK(string inputLine)
+        {
+            //arrange
+            const double tolerance = 0.01;
+
+            //act
+            FloatingOrdinalNullablesSon parsedObject = LineParser.Parse<FloatingOrdinalNullablesSon>(inputLine);
+
+            //assert
+            Assert.AreEqual(null, parsedObject.FloatNull);
+            Assert.That(1.23d, Is.EqualTo(parsedObject.FloatNotNull).Within(tolerance));
+
+            Assert.AreEqual(null, parsedObject.DoubleNull);
+            Assert.That(2.34d, Is.EqualTo(parsedObject.DoubleNotNull).Within(tolerance));
+
+            Assert.AreEqual(null, parsedObject.DecimalNull);
+            Assert.That(3.45d, Is.EqualTo(parsedObject.DecimalNotNull).Within(tolerance));
+        }
     }
 }
