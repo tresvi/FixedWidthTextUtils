@@ -4,7 +4,6 @@ using System;
 
 namespace Ejemplo_NF_4._8
 {
-    [StringeableClass(110, ' ')]
     internal class Cliente
     {
         [IntegerField(0, 8, true)]

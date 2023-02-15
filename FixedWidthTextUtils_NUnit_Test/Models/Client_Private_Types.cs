@@ -3,7 +3,7 @@ using System;
 
 namespace FixedWidthTextUtils_NUnit_Test.Models
 {
-    [StringeableClass(21, ' ')]
+ 
     internal class Client_With_Priv_Method
     {
 #pragma warning disable IDE0051
