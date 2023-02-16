@@ -8,11 +8,9 @@ namespace FixedWidthTextUtils
 {
     public static class LineParser
     {
-        //TODO: Agregar Cache estatico para cada tipo de objeto, memorizando el LineLength y el FillerChar por cada tipo de objeto usado
-        //TODO: Agregar cache estatico de Attributtes por Propiedad por Objeto, para que no tenga que recorrer todos los attributes de objetos que ya conoce.
+        //TODO: Agregar cache estatico con el nombre de las clases que ya se validaron, para no validarlas 2 veces en una misma instancia.
         //TODO: Agregar algun control o indicador de que hay campos cuya definicion se solapa.
         //TODO: Para los stringFieldAttibute se valida la start position y la endPosition, en los demas no.
-        //TODO: Usar {nameof(fieldLength)} en donde se mencionen nombres de properties
 
         public static bool TryParse<T>(string input, out T result) where T : new()
         {
