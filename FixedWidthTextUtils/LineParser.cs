@@ -10,7 +10,6 @@ namespace FixedWidthTextUtils
     {
         //TODO: Agregar cache estatico con el nombre de las clases que ya se validaron, para no validarlas 2 veces en una misma instancia.
         //TODO: Agregar algun control o indicador de que hay campos cuya definicion se solapa.
-        //TODO: Para los stringFieldAttibute se valida la start position y la endPosition, en los demas no.
 
         public static bool TryParse<T>(string input, out T result) where T : new()
         {

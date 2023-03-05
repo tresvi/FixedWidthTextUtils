@@ -6,9 +6,6 @@ namespace FixedWidthTextUtils.Attributes
 {
     public sealed class NullableBooleanFieldAttribute : BooleanFieldAttribute
     {
-        //TODO: Validar que el textoForNull, TextForFalse y TextForTrue, tengan la longitud del campo recortado.
-        //TODO: Validar que el textoForNull tengan la longitud del campo recortado para todas las clases.
-
         private string TextForNull { get; set; }
 
         public NullableBooleanFieldAttribute(int startPosition, int endPosition, string textForTrue, string textForFalse, string textForNull) 
@@ -30,18 +27,6 @@ namespace FixedWidthTextUtils.Attributes
             {
                 errorMesage = $"La longitud definida en el parametro \"{nameof(TextForNull)}\" del attribute ({this.TextForNull.Length} " +
                     $"caracteres) debe coincidir con la longitud definida para este campo ({this.Length} caracteres)";
-                return false;
-            }
-
-            if (this.TextForNull == this.TextForTrue)
-            {
-                errorMesage = $"El valor del parametro \"{nameof(TextForNull)}\" no puede coincidir con el valor del parametro \"{nameof(TextForTrue)}\"";
-                return false;
-            }
-
-            if (this.TextForNull == this.TextForFalse)
-            {
-                errorMesage = $"El valor del parametro \"{nameof(TextForNull)}\" no puede coincidir con el valor del parametro \"{nameof(TextForFalse)}\"";
                 return false;
             }
 
