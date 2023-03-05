@@ -106,9 +106,9 @@ namespace FixedWidthTextUtils_NUnit_Test
             Assert.That(3.45d, Is.EqualTo(parsedObject.DecimalNotNull).Within(tolerance));
         }
 
+
         [TestCase(1, "SINO  HELLO    1234        30122023")]
         [TestCase(2, "  01  02  03  04  05  06  07  08")]
-        //[TestCase(3, "    0123    0234    0345    XXXXX")]
         public void ToTextLine_InputString_ReturnString(int testCase, string inputLine)
         {
             //arrange
