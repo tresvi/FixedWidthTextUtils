@@ -13,23 +13,31 @@ namespace FixedWidthTextUtils.Attributes
     {
         internal bool FillLeftWithZero { get; set; }
 
-        public IntegerFieldAttribute(int startPosition, int endPosition, bool fillLeftWithZero) 
+        public IntegerFieldAttribute(int startPosition, int endPosition, bool fillLeftWithZero = true) 
             : base(startPosition, endPosition)
         {
             FillLeftWithZero = fillLeftWithZero;
         }
 
-        public IntegerFieldAttribute(int fieldLength, bool fillLeftWithZero) 
+        public IntegerFieldAttribute(int fieldLength, bool fillLeftWithZero = true) 
             : base(fieldLength)
         {
             FillLeftWithZero = fillLeftWithZero;
         }
 
-        internal override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
+
+        public override bool ValidateFieldDefinition(PropertyInfo property, object originObject, out string errorMesage)
+        {
+            errorMesage = "";
+            return true;
+        }
+
+
+        public override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {
             //Reviso si la asignacion se hace a alguna property de algun tipo entero
             string parseErrorMessage = $"El valor \"{rawFieldContent}\" no puede ser reconocido como un entero válido del tipo {property.PropertyType.Name} " +
-                $"para la property {property.Name}. Verifique que el dato sea numérico y este dentro del rango del tipo correspondiente";
+                $"para la property {targetObject.GetType().Name}.{property.Name}. Verifique que el dato sea numérico y este dentro del rango del tipo correspondiente";
 
             if (property.PropertyType == typeof(byte) || property.PropertyType == typeof(byte?))
             {
@@ -95,7 +103,7 @@ namespace FixedWidthTextUtils.Attributes
 
 
 
-        internal override string ToPlainText(PropertyInfo property, object originObject)
+        public override string ToText(PropertyInfo property, object originObject)
         {
             //IntegerFieldAttribute integerAttribute = (IntegerFieldAttribute) fieldAttribute;
             string outputText = property.GetValue(originObject).ToString().Trim();

@@ -11,7 +11,7 @@ namespace FixedWidthTextUtils.Attributes
         internal int DecimalPositions { get; set; }
         internal bool FillLeftWithZero { get; set; }
 
-        public FloatingFieldAttribute(int startPosition, int endPosition, int decimalPositions, bool fillLeftWithZeros) 
+        public FloatingFieldAttribute(int startPosition, int endPosition, int decimalPositions, bool fillLeftWithZeros = true) 
             : base(startPosition, endPosition)
         {
             if (decimalPositions < 0)
@@ -21,7 +21,7 @@ namespace FixedWidthTextUtils.Attributes
             FillLeftWithZero = fillLeftWithZeros;
         }
 
-        public FloatingFieldAttribute(int fieldLength, int decimalPositions, bool fillLeftWithZeros) 
+        public FloatingFieldAttribute(int fieldLength, int decimalPositions, bool fillLeftWithZeros = true) 
             : base(fieldLength)
         {
             if (decimalPositions < 0)
@@ -32,7 +32,14 @@ namespace FixedWidthTextUtils.Attributes
         }
 
 
-        internal override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
+        public override bool ValidateFieldDefinition(PropertyInfo property, object originObject, out string errorMesage)
+        {
+            errorMesage = "";
+            return true;
+        }
+
+
+        public override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {
             int divisorDecimal = (int)Math.Pow(10, this.DecimalPositions);
 
@@ -63,7 +70,7 @@ namespace FixedWidthTextUtils.Attributes
         }
 
 
-        internal override string ToPlainText(PropertyInfo property, object originObject)
+        public override string ToText(PropertyInfo property, object originObject)
         {
             long integerPart, decimalPart;
             int decimalDivider = (int)Math.Pow(10, this.DecimalPositions);
@@ -88,7 +95,8 @@ namespace FixedWidthTextUtils.Attributes
             }
             else
             {
-                throw new SerializeFieldException($"La propiedad {property.Name} es del tipo {property.PropertyType.Name} y no es aceptada para serializar");
+                throw new SerializeFieldException($"La propiedad \"{originObject.GetType().Name}.{property.Name}\" es" +
+                    $" del tipo {property.PropertyType.Name} y no es aceptada para serializar un numero de punto flotante");
             }
 
             decimalPart = Math.Abs(decimalPart);

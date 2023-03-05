@@ -4,7 +4,7 @@ using System;
 
 namespace FixedWidthTextUtils.Attributes
 {
-    public class NullableBooleanFieldAttribute : BooleanFieldAttribute
+    public sealed class NullableBooleanFieldAttribute : BooleanFieldAttribute
     {
         //TODO: Validar que el textoForNull, TextForFalse y TextForTrue, tengan la longitud del campo recortado.
         //TODO: Validar que el textoForNull tengan la longitud del campo recortado para todas las clases.
@@ -23,7 +23,33 @@ namespace FixedWidthTextUtils.Attributes
             TextForNull = textForNull;
         }
 
-        internal override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
+
+        public override bool ValidateFieldDefinition(PropertyInfo property, object originObject, out string errorMesage)
+        {
+            if (this.Length != this.TextForNull.Length)
+            {
+                errorMesage = $"La longitud definida en el parametro \"{nameof(TextForNull)}\" del attribute ({this.TextForNull.Length} " +
+                    $"caracteres) debe coincidir con la longitud definida para este campo ({this.Length} caracteres)";
+                return false;
+            }
+
+            if (this.TextForNull == this.TextForTrue)
+            {
+                errorMesage = $"El valor del parametro \"{nameof(TextForNull)}\" no puede coincidir con el valor del parametro \"{nameof(TextForTrue)}\"";
+                return false;
+            }
+
+            if (this.TextForNull == this.TextForFalse)
+            {
+                errorMesage = $"El valor del parametro \"{nameof(TextForNull)}\" no puede coincidir con el valor del parametro \"{nameof(TextForFalse)}\"";
+                return false;
+            }
+
+            return base.ValidateFieldDefinition(property, originObject, out errorMesage);
+        }
+
+
+        public override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {
             if (property.PropertyType != typeof(bool?))
                 throw new ParseFieldException($"La propiedad de asignacion \"{targetObject.GetType().Name}" +
@@ -54,19 +80,12 @@ namespace FixedWidthTextUtils.Attributes
         }
 
 
-        internal override string ToPlainText(PropertyInfo property, object originObject)
+        public override string ToText(PropertyInfo property, object originObject)
         {
-            if (property.PropertyType != typeof(bool?))
-                throw new SerializeFieldException($"La propiedad para la serializacion \"{property.Name}\" no es del tipo Nullable<bool>");
+            if (property.GetValue(originObject) == null) return this.TextForNull;
 
-            bool? value = (bool?)property.GetValue(originObject);
+            return base.ToText(property, originObject);
 
-            if (!value.HasValue) 
-                return this.TextForNull;
-            else if (value.Value == true)
-                return this.TextForTrue;
-            else
-                return this.TextForFalse;
         }
 
     }

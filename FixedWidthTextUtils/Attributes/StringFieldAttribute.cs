@@ -5,7 +5,7 @@ using System.Reflection;
 namespace FixedWidthTextUtils.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
-    public sealed class StringFieldAttribute : FieldAttribute
+    public class StringFieldAttribute : FieldAttribute
     {
         public enum TrimMode { NoTrim, Trim, TrimStart, TrimEnd };
         public TrimMode TrimInputMode { get; set; }
@@ -34,7 +34,14 @@ namespace FixedWidthTextUtils.Attributes
         }
 
 
-        internal override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
+        public override bool ValidateFieldDefinition(PropertyInfo property, object originObject, out string errorMesage)
+        {
+            errorMesage = "";
+            return true;
+        }
+
+
+        public override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {
             if (property.PropertyType != typeof(String) || property.PropertyType != typeof(string))
                 throw new ParseFieldException($"La propiedad de asignacion {property.Name} no es del tipo string");
@@ -56,9 +63,9 @@ namespace FixedWidthTextUtils.Attributes
         }
 
 
-        internal override string ToPlainText(PropertyInfo property, object originObject)
+        public override string ToText(PropertyInfo property, object originObject)
         {
-            if (property.PropertyType != typeof(String) || property.PropertyType != typeof(string))
+            if (property.PropertyType != typeof(String) && property.PropertyType != typeof(string))
                 throw new SerializeFieldException($"La propiedad para la serializacion {property.Name} no es del tipo string");
 
             string outputText = (property.GetValue(originObject) ?? "").ToString();

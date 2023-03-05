@@ -1,8 +1,6 @@
 ﻿using FixedWidthTextUtils.Attributes;
 using FixedWidthTextUtils.Exceptions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -18,11 +16,7 @@ namespace FixedWidthTextUtils
 
                 return new string(' ', lineLength);
             }
-            catch (Exception ex)
-            {
-                throw new NonStringeableClassException($"Error al determinar la longitud de linea de la clase serializada" +
-                    $" de la clase  {value.GetType().Name}. {ex.Message}", ex);
-            }
+            catch { throw;}
         }
 
 
@@ -87,7 +81,8 @@ namespace FixedWidthTextUtils
             }
             catch (Exception ex)
             {
-                throw new NonStringeableClassException($"Error al determinar la longitud de linea y el caracter de relleno de la clase  {value.GetType().Name}. {ex.Message}", ex);
+                //throw new NonStringeableClassException($"Error al determinar la longitud de linea y el caracter de relleno de la clase  {value.GetType().Name}. {ex.Message}", ex);
+                throw new SerializeFieldException("Error al deterinar la longitud de la linea a serializar", ex);
             }
         }
 

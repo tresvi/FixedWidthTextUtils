@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace PruebaTransaccion
 {
-    [StringeableClass(92, ' ')]
     internal class Response_CU1028_T109
     {
         [IntegerField(1 , false)]

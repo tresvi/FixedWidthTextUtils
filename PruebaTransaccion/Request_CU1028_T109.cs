@@ -2,7 +2,6 @@
 
 namespace PruebaTransaccion
 {
-    [StringeableClass(711, ' ')]
     public class Request_CU1028_T109
     {
         //public string CodigoTransaccion { get; set; }       //Código de transacción(A4) - 1028 - Simple – CU0780NS

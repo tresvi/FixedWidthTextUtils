@@ -8,12 +8,9 @@ namespace FixedWidthTextUtils
 {
     public static class LineParser
     {
-        //TODO: Agregar soporte clases con properties con los tipos conocidos, pero nullables. Hoy en dia solo soporta nullable de string. Si se toma un nulo, se puede serializar con el fillerchar correspondiente
-        //TODO: Agregar Cache estatico para cada tipo de objeto, memorizando el LineLength y el FillerChar por cada tipo de objeto usado
-        //TODO: Agregar cache estatico de Attributtes por Propiedad por Objeto, para que no tenga que recorrer todos los attributes de objetos que ya conoce.
+        //TODO: Agregar cache estatico con el nombre de las clases que ya se validaron, para no validarlas 2 veces en una misma instancia.
         //TODO: Agregar algun control o indicador de que hay campos cuya definicion se solapa.
         //TODO: Para los stringFieldAttibute se valida la start position y la endPosition, en los demas no.
-        //TODO: Usar {nameof(fieldLength)} en donde se mencionen nombres de properties
 
         public static bool TryParse<T>(string input, out T result) where T : new()
         {
@@ -27,6 +24,46 @@ namespace FixedWidthTextUtils
                 result = default;
                 return false;
             }
+        }
+        
+        public static T Parse<T>(string input) where T : new()
+        {
+            if (String.IsNullOrEmpty(input)) return new T();
+            T targetObject = new T();
+
+            int ordinalModePositionCounter = 0;
+
+            PropertyInfo[] properties = targetObject.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+            foreach (PropertyInfo property in properties)
+            {
+                foreach (FieldAttribute fieldAttrib in property.GetCustomAttributes(typeof(FieldAttribute), true))
+                {
+                    if (fieldAttrib.IsOrdinalMode)
+                    {
+                        fieldAttrib.StartPosition = ordinalModePositionCounter;
+                        fieldAttrib.EndPosition = ordinalModePositionCounter + fieldAttrib.Length - 1;
+                        ordinalModePositionCounter += fieldAttrib.Length;
+                    }
+
+                    if (fieldAttrib.StartPosition > input.Length - 1)
+                        throw new ParseFieldException($"La definicion de la propiedad {property.Name} posee un StartPosition " +
+                            $"({fieldAttrib.StartPosition}) que excede el largo de la linea de entrada de {input.Length} caracteres)");
+
+                    if (fieldAttrib.EndPosition > input.Length - 1)
+                        throw new ParseFieldException($"La definicion de la propiedad {property.Name} posee un EndPosition " +
+                            $"({fieldAttrib.EndPosition}) que excede el largo de la linea de entrada ({input.Length} caracteres)");
+
+                    if (!fieldAttrib.ValidateFieldDefinition(property, targetObject, out string errorMessage))
+                        throw new ArgumentException($"Error de definicion de campo en la property {property.Name} de la clase {targetObject.GetType().Name}. Detalles: {errorMessage}");
+
+                    string rawFieldContent = input.Substring(fieldAttrib.StartPosition, Math.Min((fieldAttrib.EndPosition - fieldAttrib.StartPosition + 1), input.Length - fieldAttrib.StartPosition));
+
+                    object result = fieldAttrib.Parse(property, targetObject, rawFieldContent);
+                    property.SetValue(targetObject, result);
+                }
+            }
+            return targetObject;
         }
 
 
@@ -51,7 +88,7 @@ namespace FixedWidthTextUtils
 
                         if (fieldAttrib.EndPosition > maxLineLength)
                             throw new SerializeFieldException($"El largo de la linea declarado en el atributo Stringeable de la clase (de {maxLineLength} caracteres) es insuficiente " +
-                                $"para contener la serializacion de la propiedad {property.Name}. Extienda el tamano de linea o revise la definicion de la propiedad.");
+                                $"para contener la serializacion de la propiedad {property.Name} de la clase {value.GetType().Name}. Extienda el tamano de linea o revise la definicion de la propiedad.");
                     }
                     else
                     {
@@ -62,50 +99,15 @@ namespace FixedWidthTextUtils
                                 $"para contener la serializacion de la propiedad {property.Name}. Extienda el tamano de linea o revise la definicion de la propiedad.");
                     }
 
-                    string serializedField = fieldAttrib.ToPlainText(property, value);
+                    if (!fieldAttrib.ValidateFieldDefinition(property, value,out string errorMessage))
+                        throw new ArgumentException($"Error de definicion de campo en la property {property.Name} de la clase {value.GetType().Name}. Detalles: {errorMessage}");
+
+                    string serializedField = fieldAttrib.ToText(property, value);
                     outputLine = Utils.ReplaceAt(outputLine, fieldAttrib.StartPosition, serializedField);
                 }
             }
 
             return outputLine.ToString();
-        }
-
-
-        public static T Parse<T>(string input) where T : new()
-        {
-            if (String.IsNullOrEmpty(input)) return new T();
-            T targetObject = new T();
-            
-            int ordinalModePositionCounter = 0;
-
-            PropertyInfo[] properties = targetObject.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-
-            foreach (PropertyInfo property in properties)
-            {
-                foreach (FieldAttribute fieldAttrib in property.GetCustomAttributes(typeof(FieldAttribute), true))
-                {
-                    if (fieldAttrib.IsOrdinalMode)
-                    {
-                        fieldAttrib.StartPosition = ordinalModePositionCounter;
-                        fieldAttrib.EndPosition = ordinalModePositionCounter + fieldAttrib.Length - 1;
-                        ordinalModePositionCounter += fieldAttrib.Length;
-                    }
-
-                    if (fieldAttrib.StartPosition > input.Length - 1)
-                        throw new ParseFieldException($"La definicion de la propiedad {property.Name} posee un StartPosition " +
-                            $"({fieldAttrib.StartPosition}) que excede el largo de la linea de entrada de {input.Length} caracteres)");
-
-                    if (fieldAttrib.EndPosition > input.Length - 1)
-                        throw new ParseFieldException($"La definicion de la propiedad {property.Name} posee un EndPosition " +
-                            $"({fieldAttrib.EndPosition}) que excede el largo de la linea de entrada ({input.Length} caracteres)");
-
-                    string rawFieldContent = input.Substring(fieldAttrib.StartPosition, Math.Min((fieldAttrib.EndPosition - fieldAttrib.StartPosition + 1), input.Length - fieldAttrib.StartPosition));
-
-                    object result = fieldAttrib.Parse(property, targetObject, rawFieldContent);
-                    property.SetValue(targetObject, result);
-                }
-            }
-            return targetObject;
         }
 
 

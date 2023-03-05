@@ -1,21 +1,22 @@
 ﻿using FixedWidthTextUtils.Exceptions;
+using System;
 using System.Reflection;
 
 namespace FixedWidthTextUtils.Attributes
 {
-    public sealed class NullableFloatingFieldAttribute : FloatingFieldAttribute
+    public sealed class NullableDateTimeFieldAttribute : DateTimeFieldAttribute
     {
         private string TextForNull { get; set; }
 
-        public NullableFloatingFieldAttribute(int startPosition, int endPosition, int decimalPositions, string textForNull, bool fillLeftWithZeros = true)
-            : base(startPosition, endPosition, decimalPositions, fillLeftWithZeros)
+        public NullableDateTimeFieldAttribute(int startPosition, int endPosition, string format, string textForNull, bool leftPadding = false)
+            : base(startPosition, endPosition, format, leftPadding)
         {
             this.TextForNull = textForNull;
         }
 
 
-        public NullableFloatingFieldAttribute(int fieldLength, int decimalPositions, string textForNull, bool fillLeftWithZeros = true)
-            : base(fieldLength, decimalPositions, fillLeftWithZeros)
+        public NullableDateTimeFieldAttribute(int fieldLength, string format, string textForNull, bool leftPadding = false) 
+            : base(fieldLength, format, leftPadding)
         {
             this.TextForNull = textForNull;
         }
@@ -33,18 +34,13 @@ namespace FixedWidthTextUtils.Attributes
             return base.ValidateFieldDefinition(property, originObject, out errorMesage);
         }
 
-
         public override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {
-            bool isValidType = property.PropertyType == typeof(float?) 
-                            || property.PropertyType == typeof(double?) 
-                            || property.PropertyType == typeof(decimal?);
-            
-            if (!isValidType) 
-                throw new ParseFieldException($"La property {targetObject.GetType().Name}.{property.Name} es de tipo " +
-                    $"{property.PropertyType.Name} el cual no es un destino soportado para un número de punto flotante Nullable");
+            if (property.PropertyType != typeof(DateTime?))
+                throw new ParseFieldException($"La propiedad de asignacion \"{targetObject.GetType().Name}.{property.Name}\", " +
+                    $"es del tipo {property.PropertyType.Name} pero se esperaba un {typeof(DateTime?).Name}");
 
-            if (rawFieldContent == this.TextForNull) 
+            if (rawFieldContent == this.TextForNull)
                 return null;
             else
                 return base.Parse(property, targetObject, rawFieldContent);

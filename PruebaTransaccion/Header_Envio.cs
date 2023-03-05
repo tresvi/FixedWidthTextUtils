@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PruebaTransaccion
 {
-    [StringeableClass(55, ' ')]
+
     public class Header_Envio
     {
         [StringField(4)]

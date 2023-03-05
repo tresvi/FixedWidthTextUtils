@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 
 namespace PruebaTransaccion
 {
-
-    [StringeableClass(600, ' ')]        //Conte 598
     internal class Response_TRX_500ConsultaCliente
     {
         [StringField(9, 9)]

@@ -6,7 +6,6 @@ using System.Text;
 namespace FixedWidthTextUtils_NUnit_Test.Models
 {
 
-    [StringeableClass(110, ' ')]
     internal class Client_Simple
     {
         [IntegerField(0, 8, true)]

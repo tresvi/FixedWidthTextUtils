@@ -2,7 +2,6 @@
 
 namespace PruebaTransaccion
 {
-    [StringeableClass(95, ' ')]        //Conte 598
     internal class Request_TRX500_ConsultaCliente
     {
         [StringField(0, 54)]

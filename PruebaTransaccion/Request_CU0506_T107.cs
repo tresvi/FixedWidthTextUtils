@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace PruebaTransaccion
 {
-    [StringeableClass(300, ' ')]
     public class Request_CU0506_T107
     {
         [StringField(55)]
