@@ -1,6 +1,8 @@
 ﻿using FixedWidthTextUtils.Attributes;
 using FixedWidthTextUtils.Exceptions;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Text;
 
@@ -97,6 +99,25 @@ namespace FixedWidthTextUtils
         internal static string ReplaceAt(string str, int replaceIndex, string textToInsert)
         {
             return str.Remove(replaceIndex, textToInsert.Length).Insert(replaceIndex, textToInsert);
+        }
+
+
+        internal static string GetLastLine(string filePath, Encoding encoding, out int lastLineNumber)
+        {
+            lastLineNumber = 0;
+            string lastLine = "";
+            using (StreamReader sr = new StreamReader(filePath, encoding))
+            {
+                string inputLine = sr.ReadLine();
+                if (inputLine == null) return "";
+
+                do
+                {
+                    lastLine = inputLine;
+                    lastLineNumber++;
+                } while ((inputLine = sr.ReadLine()) != null);
+            }
+            return lastLine;
         }
     }
 }

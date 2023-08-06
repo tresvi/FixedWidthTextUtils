@@ -7,6 +7,7 @@ using System.Text;
 
 namespace FixedWidthTextUtils
 {
+    //TODO: Agregar Test de Archivho vacio
     public class FileParser
     {
         public string Path { get; set; }
@@ -30,6 +31,12 @@ namespace FixedWidthTextUtils
 
         public List<T> Parse<T>(bool ignoreWrongLines) where T : new()
         {
+            return this.Parse<T>(ignoreWrongLines, 0);
+        }
+
+
+        internal List<T> Parse<T>(bool ignoreWrongLines, int skipLine) where T : new()
+        {
             List<T> parsedLines = new List<T>();
             long lineNumber = 0;
             string inputLine = "";
@@ -45,6 +52,7 @@ namespace FixedWidthTextUtils
                         try
                         {
                             lineNumber++;
+                            if (lineNumber == skipLine) continue;
 
                             if (inputLine.Length != lineLengthOK)
                             {

@@ -10,6 +10,7 @@ namespace FixedWidthTextUtils
     {
         //TODO: Agregar cache estatico con el nombre de las clases que ya se validaron, para no validarlas 2 veces en una misma instancia.
         //TODO: Agregar algun control o indicador de que hay campos cuya definicion se solapa.
+        //TODO: Agregar Test con lineas de texto nula.
 
         public static bool TryParse<T>(string input, out T result) where T : new()
         {
@@ -27,7 +28,7 @@ namespace FixedWidthTextUtils
         
         public static T Parse<T>(string input) where T : new()
         {
-            if (String.IsNullOrEmpty(input)) return new T();
+            if (String.IsNullOrEmpty(input)) throw new ParseFieldException("La linea a parsear es EMPTY");
             T targetObject = new T();
 
             int ordinalModePositionCounter = 0;

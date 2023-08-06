@@ -1,0 +1,4 @@
+﻿123456789ANed Flanders        WhateverStreet      04566 2222Brussels      Belgium        19811229180919       
+222222222AHomero Simpson      WhateverStreet      00117 2222Brussels      Belgium        19811229180911       
+333333333BSeymour Skinner     WhateverStreet      00117 2222Brussels      Belgium        19811229180911       
+T000003C0000679012344
