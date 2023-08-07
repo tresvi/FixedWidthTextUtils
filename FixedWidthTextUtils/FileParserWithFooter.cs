@@ -1,6 +1,7 @@
 ﻿using FixedWidthTextUtils.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace FixedWidthTextUtils
@@ -32,5 +33,19 @@ namespace FixedWidthTextUtils
             return base.Parse<T>(ignoreWrongLines, lastLineNumber);
         }
 
+
+        public void ToFlatFile<T>(List<T> entities, F footer, string outputPath)
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(outputPath))
+                {
+                    foreach (object entity in entities)
+                        writer.WriteLine(LineParser.ToTextLine(entity));
+                    writer.WriteLine(LineParser.ToTextLine(footer));
+                }
+            }
+            catch { throw;}
+        }
     }
 }

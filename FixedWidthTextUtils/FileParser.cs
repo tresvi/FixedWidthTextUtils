@@ -74,7 +74,7 @@ namespace FixedWidthTextUtils
         }
 
 
-        public void ToFlatFile<T>(List<T> entities,  string outputPath)
+        public virtual void ToFlatFile<T>(List<T> entities,  string outputPath)
         {
             try
             {
@@ -84,10 +84,7 @@ namespace FixedWidthTextUtils
                         writer.WriteLine(LineParser.ToTextLine(entity));
                 }
             }
-            catch
-            {
-                throw;
-            }
+            catch{ throw; }
         }
 
     }
