@@ -7,7 +7,7 @@ using System.Text;
 
 namespace FixedWidthTextUtils
 {
-    //TODO: Agregar Test de Archivho vacio
+    //TODO: Agregar Test de Archivo vacio
     public class FileParser
     {
         public string Path { get; set; }
@@ -41,7 +41,6 @@ namespace FixedWidthTextUtils
             long lineNumber = 0;
             string inputLine = "";
             T value = new T();
-            int lineLengthOK = Utils.GetLineLength(value);
 
             try
             {
@@ -53,17 +52,6 @@ namespace FixedWidthTextUtils
                         {
                             lineNumber++;
                             if (lineNumber == skipLine) continue;
-
-                            if (inputLine.Length != lineLengthOK)
-                            {
-                                string errorLineLengthMsge = $"Longitud de linea esperada es {lineLengthOK} pero se leyo una linea de longitud {inputLine.Length}";
-
-                                if (ignoreWrongLines)
-                                    InvalidLines.Add(new InvalidLine(lineNumber, inputLine, errorLineLengthMsge));
-                                else
-                                    throw new ParseFieldException(errorLineLengthMsge);
-                            }
-
                             parsedLines.Add(LineParser.Parse<T>(inputLine));
                         }
                         catch (Exception ex)
@@ -76,10 +64,8 @@ namespace FixedWidthTextUtils
                     }
                 }
             }
-            catch (ParseFieldException)
-            {
-                throw;
-            }
+            catch (ParseFieldException){ throw; }
+            catch (IOException) { throw; }
             catch (Exception ex)
             {
                 throw new Exception($"Error al acceder al archivo de entrada. Detalles: {ex.Message}", ex);
