@@ -15,13 +15,13 @@ namespace FixedWidthTextUtils
 
         public List<T> Parse<T>(bool ignoreWrongLines, out F footer) where T : new()
         {
-            footer  = new F();
             int lastLineNumber;
             try
             {
                 string lastLine = Utils.GetLastLine(Path, Encoding, out lastLineNumber);
                 footer = LineParser.Parse<F>(lastLine);
             }
+            catch (IOException) { throw; }
             catch (ParseFieldException ex) { 
                 throw new ParseFieldException($"Error al parsear el Footer. Detalles: {ex.Message}", ex);
             }
@@ -45,7 +45,12 @@ namespace FixedWidthTextUtils
                     writer.WriteLine(LineParser.ToTextLine(footer));
                 }
             }
-            catch { throw;}
+            catch (IOException) { throw; }
+            catch (SerializeFieldException) { throw; }
+            catch (Exception ex)
+            {
+                throw new SerializeFieldException($"Error generar archivo de texto en {outputPath}. Detalles: {ex.Message}", ex);
+            }
         }
     }
 }

@@ -40,7 +40,6 @@ namespace FixedWidthTextUtils
             List<T> parsedLines = new List<T>();
             long lineNumber = 0;
             string inputLine = "";
-            T value = new T();
 
             try
             {
@@ -63,6 +62,7 @@ namespace FixedWidthTextUtils
                         }
                     }
                 }
+                return parsedLines;
             }
             catch (ParseFieldException){ throw; }
             catch (IOException) { throw; }
@@ -70,7 +70,6 @@ namespace FixedWidthTextUtils
             {
                 throw new Exception($"Error al acceder al archivo de entrada. Detalles: {ex.Message}", ex);
             }
-            return parsedLines;
         }
 
 
@@ -84,7 +83,12 @@ namespace FixedWidthTextUtils
                         writer.WriteLine(LineParser.ToTextLine(entity));
                 }
             }
-            catch{ throw; }
+            catch (IOException) { throw; }
+            catch (SerializeFieldException) { throw; }
+            catch (Exception ex)
+            {
+                throw new SerializeFieldException($"Error generar archivo de texto en {outputPath}. Detalles: {ex.Message}", ex);
+            }
         }
 
     }

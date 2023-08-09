@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FixedWidthTextUtils.Exceptions
 {
-    public abstract class FixedWidthTextException: SystemException
+    public abstract class FixedWidthTextException: ApplicationException
     {
         public FixedWidthTextException() { }
         public FixedWidthTextException(string message) : base(message) { }

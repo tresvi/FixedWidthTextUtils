@@ -2,6 +2,7 @@
 using FixedWidthTextUtils.Exceptions;
 using FixedWidthTextUtils_NUnit_Test.Models;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -82,6 +83,18 @@ namespace FixedWidthTextUtils_NUnit_Test
             bool fileComparison = File.ReadLines(filePath).SequenceEqual(File.ReadLines(OUTPUT_FILE));
             Assert.IsTrue(fileComparison);
             File.Delete(OUTPUT_FILE);
+        }
+
+        [TestCase]
+        public void ParseFile_InputNonExistentFile_ThrowsIOException()
+        {
+            string filePath = new Guid().ToString() + ".txt";
+            FileParserWithFooter<Footer_Client> fileConvert = new(filePath);
+            Footer_Client footer_client;
+            Assert.That(() =>
+                fileConvert.Parse<Client_Simple>(false, out footer_client),
+                Throws.InstanceOf<IOException>()
+            );
         }
     }
 }

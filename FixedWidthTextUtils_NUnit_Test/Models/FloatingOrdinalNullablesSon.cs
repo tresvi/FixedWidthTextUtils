@@ -11,6 +11,6 @@ namespace FixedWidthTextUtils_NUnit_Test.Models
         /// Si se usa ordinal y la clase hija estuviera decorada, al listar las properties, 
         /// antepone las secuencias de corte del hijo a las del padre.
         /// </summary>
-        public string StringPropertySinDecorar { get; set; }
+        public string? StringPropertySinDecorar { get; set; }
     }
 }
