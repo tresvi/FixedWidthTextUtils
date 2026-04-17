@@ -44,6 +44,21 @@ namespace FixedWidthTextUtils_NUnit_Test
         }
 
         [Test]
+        public void Parse_MixedOrdinalAndPositional_ThrowsArgumentException()
+        {
+            Assert.Throws<ArgumentException>(() => LineParser.Parse<Model_MixedOrdinalPositional>("0112"));
+        }
+
+        [Test]
+        public void TryParse_MixedOrdinalAndPositional_ReturnsFalse_DoesNotThrow()
+        {
+            bool ok = LineParser.TryParse<Model_MixedOrdinalPositional>("0112", out Model_MixedOrdinalPositional result);
+
+            Assert.IsFalse(ok);
+            Assert.IsNull(result);
+        }
+
+        [Test]
         public void ToTextLine_IntegerWiderThanField_ThrowsSerializeFieldException()
         {
             var model = new Model_IntegerTooWideForField();

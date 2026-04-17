@@ -39,6 +39,9 @@ namespace FixedWidthTextUtils
             if (String.IsNullOrEmpty(input)) throw new ParseFieldException("La linea a parsear es EMPTY");
 
             LineModelPlan plan = LineModelPlanCache.GetPlan(typeof(T));
+            if (plan.IsMixedOrdinalAndPositional)
+                throw new ArgumentException(plan.ModelErrorMessage);
+
             T targetObject = new T();
             int inputLength = input.Length;
 
@@ -71,6 +74,9 @@ namespace FixedWidthTextUtils
         {
             Type type = value.GetType();
             LineModelPlan plan = LineModelPlanCache.GetPlan(type);
+            if (plan.IsMixedOrdinalAndPositional)
+                throw new SerializeFieldException(plan.ModelErrorMessage);
+
             int maxLineLength = plan.LineLength;
             string initializedLine = new string(' ', maxLineLength);
             StringBuilder outputLine = new StringBuilder(initializedLine);

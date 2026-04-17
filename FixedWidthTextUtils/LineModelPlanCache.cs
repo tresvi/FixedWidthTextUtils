@@ -27,14 +27,18 @@ namespace FixedWidthTextUtils
 
     internal sealed class LineModelPlan
     {
-        public LineModelPlan(int lineLength, IReadOnlyList<FieldPlanEntry> fields)
+        public LineModelPlan(int lineLength, IReadOnlyList<FieldPlanEntry> fields, bool isMixedOrdinalAndPositional, string modelErrorMessage)
         {
             LineLength = lineLength;
             Fields = fields;
+            IsMixedOrdinalAndPositional = isMixedOrdinalAndPositional;
+            ModelErrorMessage = modelErrorMessage;
         }
 
         public int LineLength { get; }
         public IReadOnlyList<FieldPlanEntry> Fields { get; }
+        public bool IsMixedOrdinalAndPositional { get; }
+        public string ModelErrorMessage { get; }
     }
 
     /// <summary>
@@ -71,9 +75,11 @@ namespace FixedWidthTextUtils
 
             if (hasOrdinal && hasPositional)
             {
-                throw new SerializeFieldException(
-                    $"La clase {type.Name} mezcla campos en modo ordinal y posicional. " +
-                    "Use solo un modo por clase, o convierta todos los campos al mismo modo.");
+                // Plan "inválido" cacheado: la decisión de lanzar se delega a Parse/ToTextLine para que cada camino
+                // use la excepción que le corresponde (ArgumentException vs SerializeFieldException).
+                string mixedError = $"La clase {type.Name} mezcla campos en modo ordinal y posicional. " +
+                    "Use solo un modo por clase, o convierta todos los campos al mismo modo.";
+                return new LineModelPlan(0, Array.Empty<FieldPlanEntry>(), true, mixedError);
             }
 
             // Ningún ValidateFieldDefinition del proyecto usa originObject; null evita instanciar T (p. ej. ctor interno en otro ensamblado).
@@ -130,7 +136,7 @@ namespace FixedWidthTextUtils
                 lineLength = maxEndPosition + 1;
             }
 
-            return new LineModelPlan(lineLength, entries);
+            return new LineModelPlan(lineLength, entries, false, null);
         }
     }
 }
