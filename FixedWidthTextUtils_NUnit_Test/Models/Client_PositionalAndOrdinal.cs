@@ -1,4 +1,4 @@
-﻿using FixedWidthTextUtils.Attributes;
+using FixedWidthTextUtils.Attributes;
 using System;
 using System.Reflection;
 using System.Text;
@@ -35,13 +35,13 @@ namespace FixedWidthTextUtils_NUnit_Test.Models
         [DateTimeField(8, "yyyyMMdd")]
         public DateTime BirthDate { get; set; }
 
-        [IntegerField(97, 99, true)]
+        [IntegerField(3, true)]
         public int HeigthInCentimeters { get; set; }
 
-        [FloatingField(100, 102, 1, true)]
+        [FloatingField(3, 1, true)]
         public float WeightFloat { get; set; }
 
-        [StringField(103, 109)]
+        [StringField(7)]
         public string? Filler { get; set; }
 
 

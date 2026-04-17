@@ -1,10 +1,11 @@
-﻿using FixedWidthTextUtils;
+using FixedWidthTextUtils;
 using FixedWidthTextUtils_NUnit_Test.Models;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace FixedWidthTextUtils_NUnit_Test
 {
@@ -80,6 +81,35 @@ namespace FixedWidthTextUtils_NUnit_Test
                 fileConvert.Parse<Client_Simple>(false),
                 Throws.InstanceOf<IOException>()
             );
+        }
+
+
+        [Test]
+        public void ToFlatFile_WritesUsingParserEncoding_IncludingUtf8BomWhenConfigured()
+        {
+            string src = Path.Combine(TestContext.CurrentContext.TestDirectory, @"..\..\..\TestFiles\3ClientesOK.txt");
+            Assume.That(File.Exists(src), "Falta TestFiles/3ClientesOK.txt");
+
+            var encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: true);
+            string outPath = Path.Combine(Path.GetTempPath(), "FixedWidthTextUtils_enc_" + Guid.NewGuid().ToString("N") + ".txt");
+
+            try
+            {
+                var fileConvert = new FileParser(src, encoding);
+                List<Client_Simple> clientes = fileConvert.Parse<Client_Simple>(false);
+                fileConvert.ToFlatFile(clientes, outPath);
+
+                byte[] bytes = File.ReadAllBytes(outPath);
+                Assert.That(bytes.Length, Is.GreaterThanOrEqualTo(3), "Archivo vacío o demasiado corto.");
+                Assert.AreEqual(0xEF, bytes[0]);
+                Assert.AreEqual(0xBB, bytes[1]);
+                Assert.AreEqual(0xBF, bytes[2], "ToFlatFile debe usar Encoding del FileParser (UTF-8 con BOM en esta prueba).");
+            }
+            finally
+            {
+                if (File.Exists(outPath))
+                    File.Delete(outPath);
+            }
         }
 
     }

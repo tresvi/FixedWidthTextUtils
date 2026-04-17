@@ -1,9 +1,12 @@
-﻿using FixedWidthTextUtils.Attributes;
+using FixedWidthTextUtils.Attributes;
 using System;
 
-
-namespace Ejemplo_NF_4._8
+namespace Positional_Example_NF_4_8
 {
+    /// <summary>
+    /// Mapeo por posiciones absolutas en la línea (modo posicional).
+    /// Modelo de referencia para modo posicional (103 caracteres hasta WeightFloat).
+    /// </summary>
     internal class Cliente
     {
         [IntegerField(0, 8, true)]
@@ -41,6 +44,5 @@ namespace Ejemplo_NF_4._8
 
         public float PropertyNotSerialized { get; set; }
         public DateTime PropertyComputedExample { get { return DateTime.Now; } }
-
     }
 }

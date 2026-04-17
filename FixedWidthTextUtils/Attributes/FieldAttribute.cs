@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 
 namespace FixedWidthTextUtils.Attributes
@@ -35,7 +35,7 @@ namespace FixedWidthTextUtils.Attributes
 
         public abstract object Parse(PropertyInfo property, object targetObject, string rawFieldContent);
         public abstract string ToText(PropertyInfo property, object originObject);
-        public abstract bool ValidateFieldDefinition(PropertyInfo property, object originObject, out string errorMesage);
+        public abstract bool ValidateFieldDefinition(PropertyInfo property, object originObject, out string errorMessage);
 
     }
 }

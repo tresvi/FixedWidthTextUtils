@@ -1,4 +1,4 @@
-﻿using FixedWidthTextUtils.Exceptions;
+using FixedWidthTextUtils.Exceptions;
 using System;
 using System.Reflection;
 
@@ -53,30 +53,30 @@ namespace FixedWidthTextUtils.Attributes
         }
 
 
-        public override bool ValidateFieldDefinition(PropertyInfo property, object originObject, out string errorMesage)
+        public override bool ValidateFieldDefinition(PropertyInfo property, object originObject, out string errorMessage)
         {
             if (this.Length != this.TextForTrue.Length)
             {
-                errorMesage = $"La longitud definida en el parametro \"{nameof(TextForTrue)}\" del attribute ({this.TextForTrue.Length} " +
+                errorMessage = $"La longitud definida en el parametro \"{nameof(TextForTrue)}\" del attribute ({this.TextForTrue.Length} " +
                     $"caracteres) debe coincidir con la longitud definida para este campo ({this.Length} caracteres)";
                 return false;
             }
 
             if (this.TextForTrue == this.TextForFalse)
             {
-                errorMesage = $"El valor del parametro \"{nameof(TextForTrue)}\" no puede coincidir con el valor del parametro \"{nameof(TextForFalse)}\"";
+                errorMessage = $"El valor del parametro \"{nameof(TextForTrue)}\" no puede coincidir con el valor del parametro \"{nameof(TextForFalse)}\"";
                 return false;
             }
 
             //Se permite que el false sea el caracter empty ". esto es para dar flexibilidad en la definicionde los false
             if (this.Length != this.TextForFalse.Length && this.TextForFalse != "")
             {
-                errorMesage = $"La longitud definida en el parametro \"{nameof(TextForFalse)}\" del attribute ({this.TextForFalse.Length} " +
+                errorMessage = $"La longitud definida en el parametro \"{nameof(TextForFalse)}\" del attribute ({this.TextForFalse.Length} " +
                     $"caracteres) debe coincidir con la longitud del campo definido ({this.Length} caracteres)";
                 return false;
             }
 
-            errorMesage = "";
+            errorMessage = "";
             return true;
         }
 

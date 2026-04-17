@@ -1,4 +1,4 @@
-﻿using FixedWidthTextUtils.Attributes;
+using FixedWidthTextUtils.Attributes;
 using FixedWidthTextUtils.Exceptions;
 using System;
 using System.Reflection;
@@ -8,7 +8,6 @@ namespace FixedWidthTextUtils
 {
     public static class LineParser
     {
-        //TODO: Agregar cache estatico con el nombre de las clases que ya se validaron, para no validarlas 2 veces en una misma instancia.
         //TODO: Agregar algun control o indicador de que hay campos cuya definicion se solapa.
         //TODO: Agregar Test con lineas de texto nula.
 
@@ -19,92 +18,91 @@ namespace FixedWidthTextUtils
                 result = Parse<T>(input);
                 return true;
             }
-            catch
+            catch (ParseFieldException)
             {
-                result = default;
+                result = default(T);
                 return false;
             }
+            catch (ArgumentException)
+            {
+                result = default(T);
+                return false;
+            }
+            catch
+            {
+                throw;
+            }
         }
-        
+
         public static T Parse<T>(string input) where T : new()
         {
             if (String.IsNullOrEmpty(input)) throw new ParseFieldException("La linea a parsear es EMPTY");
+
+            LineModelPlan plan = LineModelPlanCache.GetPlan(typeof(T));
+            if (plan.IsMixedOrdinalAndPositional)
+                throw new ArgumentException(plan.ModelErrorMessage);
+
             T targetObject = new T();
+            int inputLength = input.Length;
 
-            int ordinalModePositionCounter = 0;
-
-            PropertyInfo[] properties = targetObject.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-
-            foreach (PropertyInfo property in properties)
+            foreach (FieldPlanEntry entry in plan.Fields)
             {
-                foreach (FieldAttribute fieldAttrib in property.GetCustomAttributes(typeof(FieldAttribute), true))
-                {
-                    if (fieldAttrib.IsOrdinalMode)
-                    {
-                        fieldAttrib.StartPosition = ordinalModePositionCounter;
-                        fieldAttrib.EndPosition = ordinalModePositionCounter + fieldAttrib.Length - 1;
-                        ordinalModePositionCounter += fieldAttrib.Length;
-                    }
+                PropertyInfo property = entry.Property;
+                FieldAttribute fieldAttrib = entry.FieldAttrib;
+                int startPos = entry.ParseStart;
+                int endPos = entry.ParseEndInclusive;
 
-                    if (fieldAttrib.StartPosition > input.Length - 1)
-                        throw new ParseFieldException($"La definicion de la propiedad {property.Name} posee un StartPosition " +
-                            $"({fieldAttrib.StartPosition}) que excede el largo de la linea de entrada de {input.Length} caracteres)");
+                if (startPos > inputLength - 1)
+                    throw new ParseFieldException($"La definicion de la propiedad {property.Name} posee un StartPosition " +
+                        $"({startPos}) que excede el largo de la linea de entrada de {inputLength} caracteres)");
 
-                    if (fieldAttrib.EndPosition > input.Length - 1)
-                        throw new ParseFieldException($"La definicion de la propiedad {property.Name} posee un EndPosition " +
-                            $"({fieldAttrib.EndPosition}) que excede el largo de la linea de entrada ({input.Length} caracteres)");
+                if (endPos > inputLength - 1)
+                    throw new ParseFieldException($"La definicion de la propiedad {property.Name} posee un EndPosition " +
+                        $"({endPos}) que excede el largo de la linea de entrada ({inputLength} caracteres)");
 
-                    if (!fieldAttrib.ValidateFieldDefinition(property, targetObject, out string errorMessage))
-                        throw new ArgumentException($"Error de definicion de campo en la property {property.Name} de la clase {targetObject.GetType().Name}. Detalles: {errorMessage}");
+                string rawFieldContent = input.Substring(startPos, Math.Min((endPos - startPos + 1), inputLength - startPos));
 
-                    string rawFieldContent = input.Substring(fieldAttrib.StartPosition, Math.Min((fieldAttrib.EndPosition - fieldAttrib.StartPosition + 1), input.Length - fieldAttrib.StartPosition));
-
-                    object result = fieldAttrib.Parse(property, targetObject, rawFieldContent);
-                    property.SetValue(targetObject, result);
-                }
+                object parseResult = fieldAttrib.Parse(property, targetObject, rawFieldContent);
+                property.SetValue(targetObject, parseResult);
             }
+
             return targetObject;
         }
 
 
         public static string ToTextLine(object value)
         {
-            string initializedLine = Utils.GetInitializedLine(value);
-            int maxLineLength = initializedLine.Length;
+            Type type = value.GetType();
+            LineModelPlan plan = LineModelPlanCache.GetPlan(type);
+            if (plan.IsMixedOrdinalAndPositional)
+                throw new SerializeFieldException(plan.ModelErrorMessage);
+
+            int maxLineLength = plan.LineLength;
+            string initializedLine = new string(' ', maxLineLength);
             StringBuilder outputLine = new StringBuilder(initializedLine);
-            int ordinalModePositionCounter = 0;
 
-            PropertyInfo[] properties = value.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-
-            foreach (PropertyInfo property in properties)
+            foreach (FieldPlanEntry entry in plan.Fields)
             {
-                foreach (FieldAttribute fieldAttrib in property.GetCustomAttributes(typeof(FieldAttribute), true))
+                PropertyInfo property = entry.Property;
+                FieldAttribute fieldAttrib = entry.FieldAttrib;
+                int startPos = entry.SerializeStart;
+
+                if (fieldAttrib.IsOrdinalMode)
                 {
-                    if (fieldAttrib.IsOrdinalMode)
-                    {
-                        fieldAttrib.StartPosition = ordinalModePositionCounter;
-                        ordinalModePositionCounter += fieldAttrib.Length;
-                        fieldAttrib.EndPosition = ordinalModePositionCounter;
-
-                        if (fieldAttrib.EndPosition > maxLineLength)
-                            throw new SerializeFieldException($"El largo de la linea declarado en el atributo Stringeable de la clase (de {maxLineLength} caracteres) es insuficiente " +
-                                $"para contener la serializacion de la propiedad {property.Name} de la clase {value.GetType().Name}. Extienda el tamano de linea o revise la definicion de la propiedad.");
-                    }
-                    else
-                    {
-                        ordinalModePositionCounter = fieldAttrib.EndPosition;
-
-                        if (fieldAttrib.EndPosition >= maxLineLength)
-                            throw new SerializeFieldException($"El largo de la linea declarado en el atributo Stringeable de la clase (de {maxLineLength} caracteres) es insuficiente " +
-                                $"para contener la serializacion de la propiedad {property.Name}. Extienda el tamano de linea o revise la definicion de la propiedad.");
-                    }
-
-                    if (!fieldAttrib.ValidateFieldDefinition(property, value,out string errorMessage))
-                        throw new ArgumentException($"Error de definicion de campo en la property {property.Name} de la clase {value.GetType().Name}. Detalles: {errorMessage}");
-
-                    string serializedField = fieldAttrib.ToText(property, value);
-                    outputLine = Utils.ReplaceAt(outputLine, fieldAttrib.StartPosition, serializedField);
+                    int exclusiveEnd = startPos + fieldAttrib.Length;
+                    if (exclusiveEnd > maxLineLength)
+                        throw new SerializeFieldException($"El largo de la linea declarado en el atributo Stringeable de la clase (de {maxLineLength} caracteres) es insuficiente " +
+                            $"para contener la serializacion de la propiedad {property.Name} de la clase {type.Name}. Extienda el tamano de linea o revise la definicion de la propiedad.");
                 }
+                else
+                {
+                    if (fieldAttrib.EndPosition >= maxLineLength)
+                        throw new SerializeFieldException($"El largo de la linea declarado en el atributo Stringeable de la clase (de {maxLineLength} caracteres) es insuficiente " +
+                            $"para contener la serializacion de la propiedad {property.Name}. Extienda el tamano de linea o revise la definicion de la propiedad.");
+                }
+
+                string serializedField = fieldAttrib.ToText(property, value);
+                outputLine = Utils.ReplaceAt(outputLine, startPos, serializedField);
             }
 
             return outputLine.ToString();

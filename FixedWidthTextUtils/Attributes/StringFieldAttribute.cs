@@ -1,4 +1,4 @@
-﻿using FixedWidthTextUtils.Exceptions;
+using FixedWidthTextUtils.Exceptions;
 using System;
 using System.Reflection;
 
@@ -21,23 +21,23 @@ namespace FixedWidthTextUtils.Attributes
         public StringFieldAttribute(int fieldLength, TrimMode trimInputMode = TrimMode.TrimEnd, bool leftPadding = false) : base(fieldLength)
         {
             if (fieldLength < 1)
-                throw new ArgumentException(nameof(fieldLength), $"{nameof(fieldLength)} debe ser mayor a 1");
+                throw new ArgumentException(nameof(fieldLength), $"{nameof(fieldLength)} debe ser mayor o igual a 1");
 
             TrimInputMode = trimInputMode;
             LeftPadding = leftPadding;
         }
 
 
-        public override bool ValidateFieldDefinition(PropertyInfo property, object originObject, out string errorMesage)
+        public override bool ValidateFieldDefinition(PropertyInfo property, object originObject, out string errorMessage)
         {
-            errorMesage = "";
+            errorMessage = "";
             return true;
         }
 
 
         public override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {
-            if (property.PropertyType != typeof(String) || property.PropertyType != typeof(string))
+            if (property.PropertyType != typeof(string))
                 throw new ParseFieldException($"La propiedad de asignacion {property.Name} no es del tipo string");
 
             switch (this.TrimInputMode)
@@ -59,7 +59,7 @@ namespace FixedWidthTextUtils.Attributes
 
         public override string ToText(PropertyInfo property, object originObject)
         {
-            if (property.PropertyType != typeof(String) && property.PropertyType != typeof(string))
+            if (property.PropertyType != typeof(string))
                 throw new SerializeFieldException($"La propiedad para la serializacion {property.Name} no es del tipo string");
 
             string outputText = (property.GetValue(originObject) ?? "").ToString();

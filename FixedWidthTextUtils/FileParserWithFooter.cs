@@ -1,4 +1,4 @@
-﻿using FixedWidthTextUtils.Exceptions;
+using FixedWidthTextUtils.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,7 +38,7 @@ namespace FixedWidthTextUtils
         {
             try
             {
-                using (StreamWriter writer = new StreamWriter(outputPath))
+                using (StreamWriter writer = new StreamWriter(outputPath, false, this.Encoding))
                 {
                     foreach (object entity in entities)
                         writer.WriteLine(LineParser.ToTextLine(entity));
