@@ -195,5 +195,28 @@ namespace FixedWidthTextUtils_NUnit_Test
         {
             Assert.Throws<ArgumentException>(() => LineParser.Parse<Model_DateTimeFormatLengthMismatch>("20220101"));
         }
+
+        [Test]
+        public void StringFieldAttribute_ordinal_fieldLength_less_than_one_throws_ArgumentException()
+        {
+            Assert.Throws<ArgumentException>(() => new StringFieldAttribute(0));
+        }
+
+        [Test]
+        public void Parse_IntegerField_non_numeric_raw_ThrowsParseFieldException_for_each_core_integer_type()
+        {
+            Assert.Throws<ParseFieldException>(() => LineParser.Parse<Model_IntegerField_Byte>("abc"));
+            Assert.Throws<ParseFieldException>(() => LineParser.Parse<Model_IntegerField_SByte>("abc"));
+            Assert.Throws<ParseFieldException>(() => LineParser.Parse<Model_IntegerField_UShort>("abc"));
+            Assert.Throws<ParseFieldException>(() => LineParser.Parse<Model_IntegerField_UInt>("abc"));
+            Assert.Throws<ParseFieldException>(() => LineParser.Parse<Model_IntegerField_ULong>("abc"));
+            Assert.Throws<ParseFieldException>(() => LineParser.Parse<Model_IntegerField_Long>("abc"));
+        }
+
+        [Test]
+        public void Parse_IntegerField_ulong_negative_raw_ThrowsParseFieldException()
+        {
+            Assert.Throws<ParseFieldException>(() => LineParser.Parse<Model_IntegerField_ULong>("-1"));
+        }
     }
 }
