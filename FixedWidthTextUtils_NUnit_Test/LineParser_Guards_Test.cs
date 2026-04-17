@@ -44,6 +44,21 @@ namespace FixedWidthTextUtils_NUnit_Test
         }
 
         [Test]
+        public void Parse_MixedOrdinalAndPositional_ThrowsArgumentException()
+        {
+            Assert.Throws<ArgumentException>(() => LineParser.Parse<Model_MixedOrdinalPositional>("0112"));
+        }
+
+        [Test]
+        public void TryParse_MixedOrdinalAndPositional_ReturnsFalse_DoesNotThrow()
+        {
+            bool ok = LineParser.TryParse<Model_MixedOrdinalPositional>("0112", out Model_MixedOrdinalPositional result);
+
+            Assert.IsFalse(ok);
+            Assert.IsNull(result);
+        }
+
+        [Test]
         public void ToTextLine_IntegerWiderThanField_ThrowsSerializeFieldException()
         {
             var model = new Model_IntegerTooWideForField();
@@ -194,6 +209,29 @@ namespace FixedWidthTextUtils_NUnit_Test
         public void Parse_DateTimeFieldDefinition_FormatLengthMismatch_ThrowsArgumentException()
         {
             Assert.Throws<ArgumentException>(() => LineParser.Parse<Model_DateTimeFormatLengthMismatch>("20220101"));
+        }
+
+        [Test]
+        public void StringFieldAttribute_ordinal_fieldLength_less_than_one_throws_ArgumentException()
+        {
+            Assert.Throws<ArgumentException>(() => new StringFieldAttribute(0));
+        }
+
+        [Test]
+        public void Parse_IntegerField_non_numeric_raw_ThrowsParseFieldException_for_each_core_integer_type()
+        {
+            Assert.Throws<ParseFieldException>(() => LineParser.Parse<Model_IntegerField_Byte>("abc"));
+            Assert.Throws<ParseFieldException>(() => LineParser.Parse<Model_IntegerField_SByte>("abc"));
+            Assert.Throws<ParseFieldException>(() => LineParser.Parse<Model_IntegerField_UShort>("abc"));
+            Assert.Throws<ParseFieldException>(() => LineParser.Parse<Model_IntegerField_UInt>("abc"));
+            Assert.Throws<ParseFieldException>(() => LineParser.Parse<Model_IntegerField_ULong>("abc"));
+            Assert.Throws<ParseFieldException>(() => LineParser.Parse<Model_IntegerField_Long>("abc"));
+        }
+
+        [Test]
+        public void Parse_IntegerField_ulong_negative_raw_ThrowsParseFieldException()
+        {
+            Assert.Throws<ParseFieldException>(() => LineParser.Parse<Model_IntegerField_ULong>("-1"));
         }
     }
 }

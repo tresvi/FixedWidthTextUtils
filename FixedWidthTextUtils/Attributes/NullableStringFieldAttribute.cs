@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace FixedWidthTextUtils.Attributes
 {
-    internal sealed class NullableStringFieldAttribute : StringFieldAttribute
+    public sealed class NullableStringFieldAttribute : StringFieldAttribute
     {
         private string TextForNull { get; set; }
 
