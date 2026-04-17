@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using FixedWidthTextUtils.Attributes;
 using FixedWidthTextUtils_NUnit_Test.Models;
 using System;
@@ -119,6 +119,19 @@ namespace FixedWidthTextUtils_NUnit
 
             //asssert
             Assert.AreEqual(inputLine, outputLine);
+        }
+
+
+        [Test]
+        public void ToTextLine_IntegerField_WithNullPropertyValue_DoesNotThrow()
+        {
+            Client cliente = LineParser.Parse<Client>(inputLine1);
+            cliente.HouseNumber = null;
+
+            string outputLine = LineParser.ToTextLine(cliente);
+
+            string expectedLine = inputLine1.Substring(0, 50) + "00000" + inputLine1.Substring(55);
+            Assert.AreEqual(expectedLine, outputLine);
         }
 
 
