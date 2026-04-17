@@ -1,9 +1,12 @@
-﻿using FixedWidthTextUtils.Attributes;
+using FixedWidthTextUtils.Attributes;
 using System;
 
-
-namespace Ejemplo_NF_4._8
+namespace Ordinal_Example_NF_4_8
 {
+    /// <summary>
+    /// Mapeo por orden de propiedades (modo ordinal): cada atributo declara solo el largo del campo.
+    /// Modelo de referencia para modo ordinal (solo largos de campo).
+    /// </summary>
     internal class ClienteOrdinal
     {
         [StringField(1)]
