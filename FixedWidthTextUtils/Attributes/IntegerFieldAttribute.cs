@@ -106,7 +106,8 @@ namespace FixedWidthTextUtils.Attributes
         public override string ToText(PropertyInfo property, object originObject)
         {
             //IntegerFieldAttribute integerAttribute = (IntegerFieldAttribute) fieldAttribute;
-            string outputText = property.GetValue(originObject).ToString().Trim();
+            object initialValue = property.GetValue(originObject);
+            string outputText = (initialValue ?? "").ToString().Trim();
 
             if (this.FillLeftWithZero)
             {
