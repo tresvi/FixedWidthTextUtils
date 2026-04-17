@@ -47,4 +47,55 @@ namespace FixedWidthTextUtils_NUnit_Test.Models
         [FloatingField(0, 4, 1, false)]
         public float Value { get; set; }
     }
+
+    internal class Model_IntNegativeZeroPad
+    {
+        [IntegerField(0, 4, true)]
+        public int Value { get; set; } = -5;
+    }
+
+    internal class Model_IntSpacePadNoZero
+    {
+        [IntegerField(0, 2, false)]
+        public int Value { get; set; } = 42;
+    }
+
+    internal class Model_IntExactWidthFiveDigits
+    {
+        [IntegerField(0, 4, true)]
+        public int Value { get; set; } = 12345;
+    }
+
+    internal class Model_StringFixedWidth
+    {
+        [StringField(0, 3)]
+        public string Text { get; set; } = "AB";
+    }
+
+    internal class Model_FloatingFixedWidth
+    {
+        [FloatingField(0, 4, 1, true)]
+        public float Value { get; set; } = 12.3f;
+    }
+
+    /// <summary>TextForTrue más corto que el campo: ValidateFieldDefinition falla.</summary>
+    internal class Model_BooleanTrueLengthMismatch
+    {
+        [BooleanField(3, "SI", "NO")]
+        public bool Flag { get; set; }
+    }
+
+    /// <summary>TextForTrue igual a TextForFalse.</summary>
+    internal class Model_BooleanTrueEqualsFalse
+    {
+        [BooleanField(2, "OK", "OK")]
+        public bool Flag { get; set; }
+    }
+
+    /// <summary>Formato más largo que el ancho del campo.</summary>
+    internal class Model_DateTimeFormatLengthMismatch
+    {
+        [DateTimeField(0, 6, "yyyyMMdd")]
+        public DateTime When { get; set; }
+    }
 }
