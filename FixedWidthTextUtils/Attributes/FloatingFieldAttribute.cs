@@ -1,4 +1,4 @@
-﻿using FixedWidthTextUtils.Exceptions;
+using FixedWidthTextUtils.Exceptions;
 using System;
 using System.Reflection;
 
@@ -32,15 +32,17 @@ namespace FixedWidthTextUtils.Attributes
         }
 
 
-        public override bool ValidateFieldDefinition(PropertyInfo property, object originObject, out string errorMesage)
+        public override bool ValidateFieldDefinition(PropertyInfo property, object originObject, out string errorMessage)
         {
-            errorMesage = "";
+            errorMessage = "";
             return true;
         }
 
 
         public override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {
+            rawFieldContent = rawFieldContent?.Trim() ?? "";
+
             int divisorDecimal = (int)Math.Pow(10, this.DecimalPositions);
 
             if (!long.TryParse(rawFieldContent, out long valorEntero))

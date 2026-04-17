@@ -1,4 +1,4 @@
-﻿using FixedWidthTextUtils.Exceptions;
+using FixedWidthTextUtils.Exceptions;
 using System.Reflection;
 using System;
 
@@ -21,16 +21,16 @@ namespace FixedWidthTextUtils.Attributes
         }
 
 
-        public override bool ValidateFieldDefinition(PropertyInfo property, object originObject, out string errorMesage)
+        public override bool ValidateFieldDefinition(PropertyInfo property, object originObject, out string errorMessage)
         {
             if (this.Length != this.TextForNull.Length)
             {
-                errorMesage = $"La longitud definida en el parametro \"{nameof(TextForNull)}\" del attribute ({this.TextForNull.Length} " +
+                errorMessage = $"La longitud definida en el parametro \"{nameof(TextForNull)}\" del attribute ({this.TextForNull.Length} " +
                     $"caracteres) debe coincidir con la longitud definida para este campo ({this.Length} caracteres)";
                 return false;
             }
 
-            return base.ValidateFieldDefinition(property, originObject, out errorMesage);
+            return base.ValidateFieldDefinition(property, originObject, out errorMessage);
         }
 
 

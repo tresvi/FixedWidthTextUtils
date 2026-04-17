@@ -1,4 +1,4 @@
-﻿using FixedWidthTextUtils.Exceptions;
+using FixedWidthTextUtils.Exceptions;
 using System;
 using System.Reflection;
 
@@ -6,7 +6,7 @@ namespace FixedWidthTextUtils.Attributes
 {
 
     /// <summary>
-    /// Atributo de campo para enteros: int, uint, long y ulong
+    /// Atributo de campo para enteros: byte, sbyte, short, ushort, int, uint, long, ulong (y sus tipos anulables con <see cref="NullableIntegerFieldAttribute"/> para null semántico).
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
     public class IntegerFieldAttribute : FieldAttribute
@@ -26,15 +26,48 @@ namespace FixedWidthTextUtils.Attributes
         }
 
 
-        public override bool ValidateFieldDefinition(PropertyInfo property, object originObject, out string errorMesage)
+        public override bool ValidateFieldDefinition(PropertyInfo property, object originObject, out string errorMessage)
         {
-            errorMesage = "";
+            if (GetType() == typeof(IntegerFieldAttribute) && Nullable.GetUnderlyingType(property.PropertyType) != null)
+            {
+                Type underlying = Nullable.GetUnderlyingType(property.PropertyType);
+                if (underlying != null && IsCoreIntegerType(underlying))
+                {
+                    errorMessage = $"La property {property.Name} es de tipo anulable {property.PropertyType.Name}. " +
+                        $"Use {nameof(NullableIntegerFieldAttribute)} con un texto para null de longitud {this.Length}.";
+                    return false;
+                }
+            }
+
+            if (!IsSupportedIntegerPropertyType(property.PropertyType))
+            {
+                errorMessage = $"La property {property.Name} es de tipo {property.PropertyType.Name}, que no es un tipo entero soportado por {nameof(IntegerFieldAttribute)}.";
+                return false;
+            }
+
+            errorMessage = "";
             return true;
+        }
+
+        private static bool IsCoreIntegerType(Type type)
+        {
+            return type == typeof(byte) || type == typeof(sbyte)
+                || type == typeof(short) || type == typeof(ushort)
+                || type == typeof(int) || type == typeof(uint)
+                || type == typeof(long) || type == typeof(ulong);
+        }
+
+        private static bool IsSupportedIntegerPropertyType(Type propertyType)
+        {
+            Type t = Nullable.GetUnderlyingType(propertyType) ?? propertyType;
+            return IsCoreIntegerType(t);
         }
 
 
         public override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {
+            rawFieldContent = rawFieldContent?.Trim() ?? "";
+
             //Reviso si la asignacion se hace a alguna property de algun tipo entero
             string parseErrorMessage = $"El valor \"{rawFieldContent}\" no puede ser reconocido como un entero válido del tipo {property.PropertyType.Name} " +
                 $"para la property {targetObject.GetType().Name}.{property.Name}. Verifique que el dato sea numérico y este dentro del rango del tipo correspondiente";
@@ -107,7 +140,7 @@ namespace FixedWidthTextUtils.Attributes
         {
             //IntegerFieldAttribute integerAttribute = (IntegerFieldAttribute) fieldAttribute;
             object initialValue = property.GetValue(originObject);
-            string outputText = (initialValue ?? "").ToString().Trim();
+            string outputText = (initialValue ?? "").ToString();
 
             if (this.FillLeftWithZero)
             {
@@ -125,6 +158,10 @@ namespace FixedWidthTextUtils.Attributes
             {
                 outputText = outputText.PadLeft(this.Length, ' ');
             }
+
+            if (outputText.Length != this.Length)
+                throw new SerializeFieldException($"La serialización del entero para {originObject.GetType().Name}.{property.Name} produce {outputText.Length} caracteres " +
+                    $"pero el campo tiene longitud {this.Length}. Ajuste el valor o el ancho del campo.");
 
             return outputText;
         }

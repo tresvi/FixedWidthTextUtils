@@ -1,4 +1,4 @@
-﻿using FixedWidthTextUtils.Attributes;
+using FixedWidthTextUtils.Attributes;
 using System;
 using System.Reflection;
 using System.Text;
@@ -19,7 +19,7 @@ namespace FixedWidthTextUtils_NUnit_Test.Models
         [StringField(30, 49, StringFieldAttribute.TrimMode.NoTrim)]
         public string? Street { get; set; }
 
-        [IntegerField(50, 54, true)]
+        [NullableIntegerField(50, 54, "00000", true)]
         public int? HouseNumber { get; set; }
 
         [StringField(55, 59, StringFieldAttribute.TrimMode.TrimStart, true)]

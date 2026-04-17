@@ -1,4 +1,4 @@
-﻿using FixedWidthTextUtils.Attributes;
+using FixedWidthTextUtils.Attributes;
 using FixedWidthTextUtils.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -29,22 +29,22 @@ namespace FixedWidthTextUtils
                 PropertyInfo[] properties = value.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
                 bool existsOrdinalsFields = false;
-                //bool existsPositionalFields = false;
+                bool existsPositionalFields = false;
 
                 foreach (PropertyInfo property in properties)
                 {
                     foreach (FieldAttribute fieldAttrib in property.GetCustomAttributes(typeof(FieldAttribute), true))
                     {
                         if (fieldAttrib.IsOrdinalMode) existsOrdinalsFields = true;
-                        //if (fieldAttrib.IsOrdinalMode == false) existsPositionalFields = true;
+                        else existsPositionalFields = true;
                     }
                 }
 
-                //!!! Ver que se hace con esto
-                //if (existsOrdinalsFields && existsPositionalFields)
-                //{
-                //    throw new NonStringeableClassException($"La clase {value.GetType().Name} no fue decorada con constructores de Campo para lectura posicional y ordinal. Ambos no pueden mezclarse dentro de la misma clase, debe usar solo los de un tipo u otro ");
-                //}
+                if (existsOrdinalsFields && existsPositionalFields)
+                {
+                    throw new SerializeFieldException($"La clase {value.GetType().Name} mezcla campos en modo ordinal y posicional. " +
+                        "Use solo un modo por clase, o convierta todos los campos al mismo modo.");
+                }
 
                 int maxEndPosition = 0;
 
@@ -84,7 +84,7 @@ namespace FixedWidthTextUtils
             catch (Exception ex)
             {
                 //throw new NonStringeableClassException($"Error al determinar la longitud de linea y el caracter de relleno de la clase  {value.GetType().Name}. {ex.Message}", ex);
-                throw new SerializeFieldException("Error al deterinar la longitud de la linea a serializar", ex);
+                throw new SerializeFieldException("Error al determinar la longitud de la linea a serializar", ex);
             }
         }
 
