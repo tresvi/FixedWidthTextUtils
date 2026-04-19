@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <!-- BenchmarkDotNet exige ejecutarse en Release. -->
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <ServerGarbageCollection>true</ServerGarbageCollection>
+    <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
+    <TieredPGO>true</TieredPGO>
+    <RootNamespace>FixedWidthTextUtils.Benchmarks</RootNamespace>
+    <AssemblyName>FixedWidthTextUtils.Benchmarks</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.15.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FixedWidthTextUtils\FixedWidthTextUtils.csproj" />
+  </ItemGroup>
+
+</Project>
