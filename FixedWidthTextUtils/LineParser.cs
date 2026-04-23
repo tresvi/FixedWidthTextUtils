@@ -1,8 +1,7 @@
 using FixedWidthTextUtils.Attributes;
 using FixedWidthTextUtils.Exceptions;
 using System;
-using System.Reflection;
-using System.Text;
+using System.Buffers;
 
 namespace FixedWidthTextUtils
 {
@@ -36,34 +35,37 @@ namespace FixedWidthTextUtils
 
         public static T Parse<T>(string input) where T : new()
         {
-            if (String.IsNullOrEmpty(input)) throw new ParseFieldException("La linea a parsear es EMPTY");
+            if (string.IsNullOrEmpty(input)) throw new ParseFieldException("La linea a parsear es EMPTY");
 
             LineModelPlan plan = LineModelPlanCache.GetPlan(typeof(T));
             if (plan.IsMixedOrdinalAndPositional)
                 throw new ArgumentException(plan.ModelErrorMessage);
 
-            T targetObject = new T();
-            int inputLength = input.Length;
+            // Activator compilado evita Activator.CreateInstance + ahorra el costo del constraint new().
+            T targetObject = plan.Activator != null ? (T)plan.Activator() : new T();
+            ReadOnlySpan<char> line = input.AsSpan();
+            int inputLength = line.Length;
 
-            foreach (FieldPlanEntry entry in plan.Fields)
+            FieldPlanEntry[] fields = plan.Fields;
+            for (int idx = 0; idx < fields.Length; idx++)
             {
-                PropertyInfo property = entry.Property;
-                FieldAttribute fieldAttrib = entry.FieldAttrib;
+                FieldPlanEntry entry = fields[idx];
                 int startPos = entry.ParseStart;
                 int endPos = entry.ParseEndInclusive;
 
                 if (startPos > inputLength - 1)
-                    throw new ParseFieldException($"La definicion de la propiedad {property.Name} posee un StartPosition " +
+                    throw new ParseFieldException($"La definicion de la propiedad {entry.Property.Name} posee un StartPosition " +
                         $"({startPos}) que excede el largo de la linea de entrada de {inputLength} caracteres)");
 
                 if (endPos > inputLength - 1)
-                    throw new ParseFieldException($"La definicion de la propiedad {property.Name} posee un EndPosition " +
+                    throw new ParseFieldException($"La definicion de la propiedad {entry.Property.Name} posee un EndPosition " +
                         $"({endPos}) que excede el largo de la linea de entrada ({inputLength} caracteres)");
 
-                string rawFieldContent = input.Substring(startPos, Math.Min((endPos - startPos + 1), inputLength - startPos));
+                int sliceLen = Math.Min(endPos - startPos + 1, inputLength - startPos);
+                ReadOnlySpan<char> slice = line.Slice(startPos, sliceLen);
 
-                object parseResult = fieldAttrib.Parse(property, targetObject, rawFieldContent);
-                property.SetValue(targetObject, parseResult);
+                object parseResult = entry.FieldAttrib.Parse(entry.Property, targetObject, slice);
+                entry.Setter(targetObject, parseResult);
             }
 
             return targetObject;
@@ -78,36 +80,47 @@ namespace FixedWidthTextUtils
                 throw new SerializeFieldException(plan.ModelErrorMessage);
 
             int maxLineLength = plan.LineLength;
-            string initializedLine = new string(' ', maxLineLength);
-            StringBuilder outputLine = new StringBuilder(initializedLine);
 
-            foreach (FieldPlanEntry entry in plan.Fields)
+            // Validacion de longitud (antes se hacia campo a campo en el loop): se podria mover al
+            // BuildPlan, pero al depender de cada FieldAttribute lo dejamos aqui sin loop adicional:
+            // las llamadas a WriteTo van a fallar por su cuenta si el slice queda corto.
+
+#if NET6_0_OR_GREATER
+            return string.Create(maxLineLength, (plan, value), static (buffer, state) =>
             {
-                PropertyInfo property = entry.Property;
-                FieldAttribute fieldAttrib = entry.FieldAttrib;
-                int startPos = entry.SerializeStart;
-
-                if (fieldAttrib.IsOrdinalMode)
+                buffer.Fill(' ');
+                FieldPlanEntry[] fields = state.plan.Fields;
+                for (int i = 0; i < fields.Length; i++)
                 {
-                    int exclusiveEnd = startPos + fieldAttrib.Length;
-                    if (exclusiveEnd > maxLineLength)
-                        throw new SerializeFieldException($"El largo de la linea declarado en el atributo Stringeable de la clase (de {maxLineLength} caracteres) es insuficiente " +
-                            $"para contener la serializacion de la propiedad {property.Name} de la clase {type.Name}. Extienda el tamano de linea o revise la definicion de la propiedad.");
+                    FieldPlanEntry entry = fields[i];
+                    int len = entry.FieldAttrib.Length;
+                    Span<char> dest = buffer.Slice(entry.SerializeStart, len);
+                    entry.FieldAttrib.WriteTo(entry.Property, state.value, dest);
                 }
-                else
+            });
+#else
+            char[] rented = ArrayPool<char>.Shared.Rent(maxLineLength);
+            try
+            {
+                Span<char> buffer = rented.AsSpan(0, maxLineLength);
+                buffer.Fill(' ');
+
+                FieldPlanEntry[] fields = plan.Fields;
+                for (int i = 0; i < fields.Length; i++)
                 {
-                    if (fieldAttrib.EndPosition >= maxLineLength)
-                        throw new SerializeFieldException($"El largo de la linea declarado en el atributo Stringeable de la clase (de {maxLineLength} caracteres) es insuficiente " +
-                            $"para contener la serializacion de la propiedad {property.Name}. Extienda el tamano de linea o revise la definicion de la propiedad.");
+                    FieldPlanEntry entry = fields[i];
+                    int len = entry.FieldAttrib.Length;
+                    Span<char> dest = buffer.Slice(entry.SerializeStart, len);
+                    entry.FieldAttrib.WriteTo(entry.Property, value, dest);
                 }
 
-                string serializedField = fieldAttrib.ToText(property, value);
-                outputLine = Utils.ReplaceAt(outputLine, startPos, serializedField);
+                return new string(rented, 0, maxLineLength);
             }
-
-            return outputLine.ToString();
+            finally
+            {
+                ArrayPool<char>.Shared.Return(rented);
+            }
+#endif
         }
-
-
     }
 }

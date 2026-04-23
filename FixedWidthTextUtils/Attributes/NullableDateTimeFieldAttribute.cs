@@ -36,14 +36,20 @@ namespace FixedWidthTextUtils.Attributes
 
         public override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {
+            return Parse(property, targetObject, (rawFieldContent ?? string.Empty).AsSpan());
+        }
+
+
+        public override object Parse(PropertyInfo property, object targetObject, ReadOnlySpan<char> rawFieldContent)
+        {
             if (property.PropertyType != typeof(DateTime?))
                 throw new ParseFieldException($"La propiedad de asignacion \"{targetObject.GetType().Name}.{property.Name}\", " +
                     $"es del tipo {property.PropertyType.Name} pero se esperaba un {typeof(DateTime?).Name}");
 
-            if (rawFieldContent == this.TextForNull)
+            if (rawFieldContent.SequenceEqual(this.TextForNull.AsSpan()))
                 return null;
-            else
-                return base.Parse(property, targetObject, rawFieldContent);
+
+            return base.Parse(property, targetObject, rawFieldContent);
         }
 
 
@@ -54,5 +60,15 @@ namespace FixedWidthTextUtils.Attributes
             return base.ToText(property, originObject);
         }
 
+
+        public override void WriteTo(PropertyInfo property, object originObject, Span<char> destination)
+        {
+            if (property.GetValue(originObject) == null)
+            {
+                this.TextForNull.AsSpan().CopyTo(destination);
+                return;
+            }
+            base.WriteTo(property, originObject, destination);
+        }
     }
 }

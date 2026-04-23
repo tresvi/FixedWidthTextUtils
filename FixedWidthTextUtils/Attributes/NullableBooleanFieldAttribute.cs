@@ -1,6 +1,6 @@
 using FixedWidthTextUtils.Exceptions;
-using System.Reflection;
 using System;
+using System.Reflection;
 
 namespace FixedWidthTextUtils.Attributes
 {
@@ -36,6 +36,12 @@ namespace FixedWidthTextUtils.Attributes
 
         public override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {
+            return Parse(property, targetObject, (rawFieldContent ?? string.Empty).AsSpan());
+        }
+
+
+        public override object Parse(PropertyInfo property, object targetObject, ReadOnlySpan<char> rawFieldContent)
+        {
             if (property.PropertyType != typeof(bool?))
                 throw new ParseFieldException($"La propiedad de asignacion \"{targetObject.GetType().Name}" +
                     $".{property.Name}\" no es del tipo bool nullable");
@@ -43,22 +49,20 @@ namespace FixedWidthTextUtils.Attributes
             bool? value;
             if (this.TextForFalse == "")
             {
-                value = rawFieldContent == this.TextForTrue;
+                value = rawFieldContent.SequenceEqual(this.TextForTrue.AsSpan());
             }
             else
             {
-                if (rawFieldContent == this.TextForTrue)
+                if (rawFieldContent.SequenceEqual(this.TextForTrue.AsSpan()))
                     value = true;
-                else if (rawFieldContent == this.TextForFalse)
+                else if (rawFieldContent.SequenceEqual(this.TextForFalse.AsSpan()))
                     value = false;
-                else if (rawFieldContent == this.TextForNull)
+                else if (rawFieldContent.SequenceEqual(this.TextForNull.AsSpan()))
                     value = null;
                 else
-                { 
-                    throw new ParseFieldException($"El valor \"{rawFieldContent}\" no puede ser reconocido como un bool " +
+                    throw new ParseFieldException($"El valor \"{rawFieldContent.ToString()}\" no puede ser reconocido como un bool " +
                         $" nullable válido para ser asignado a la property \"{targetObject.GetType().Name}.{property.Name}\"." +
                         $" Verifique que el dato coincida con los valores definidos para la property");
-                }
             }
 
             return value;
@@ -70,7 +74,17 @@ namespace FixedWidthTextUtils.Attributes
             if (property.GetValue(originObject) == null) return this.TextForNull;
 
             return base.ToText(property, originObject);
+        }
 
+
+        public override void WriteTo(PropertyInfo property, object originObject, Span<char> destination)
+        {
+            if (property.GetValue(originObject) == null)
+            {
+                this.TextForNull.AsSpan().CopyTo(destination);
+                return;
+            }
+            base.WriteTo(property, originObject, destination);
         }
 
     }

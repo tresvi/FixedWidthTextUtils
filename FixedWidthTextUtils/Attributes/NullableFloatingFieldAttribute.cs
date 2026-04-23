@@ -1,4 +1,5 @@
 using FixedWidthTextUtils.Exceptions;
+using System;
 using System.Reflection;
 
 namespace FixedWidthTextUtils.Attributes
@@ -36,6 +37,12 @@ namespace FixedWidthTextUtils.Attributes
 
         public override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {
+            return Parse(property, targetObject, (rawFieldContent ?? string.Empty).AsSpan());
+        }
+
+
+        public override object Parse(PropertyInfo property, object targetObject, ReadOnlySpan<char> rawFieldContent)
+        {
             bool isValidType = property.PropertyType == typeof(float?) 
                             || property.PropertyType == typeof(double?) 
                             || property.PropertyType == typeof(decimal?);
@@ -44,10 +51,10 @@ namespace FixedWidthTextUtils.Attributes
                 throw new ParseFieldException($"La property {targetObject.GetType().Name}.{property.Name} es de tipo " +
                     $"{property.PropertyType.Name} el cual no es un destino soportado para un número de punto flotante Nullable");
 
-            if (rawFieldContent == this.TextForNull) 
+            if (rawFieldContent.SequenceEqual(this.TextForNull.AsSpan())) 
                 return null;
-            else
-                return base.Parse(property, targetObject, rawFieldContent);
+
+            return base.Parse(property, targetObject, rawFieldContent);
         }
 
 
@@ -58,5 +65,15 @@ namespace FixedWidthTextUtils.Attributes
             return base.ToText(property, originObject);
         }
 
+
+        public override void WriteTo(PropertyInfo property, object originObject, Span<char> destination)
+        {
+            if (property.GetValue(originObject) == null)
+            {
+                this.TextForNull.AsSpan().CopyTo(destination);
+                return;
+            }
+            base.WriteTo(property, originObject, destination);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using FixedWidthTextUtils.Exceptions;
+using FixedWidthTextUtils.Exceptions;
+using System;
 using System.Reflection;
 
 namespace FixedWidthTextUtils.Attributes
@@ -23,9 +24,15 @@ namespace FixedWidthTextUtils.Attributes
 
         public override object Parse(PropertyInfo property, object targetObject, string rawFieldContent)
         {
+            return Parse(property, targetObject, (rawFieldContent ?? string.Empty).AsSpan());
+        }
+
+
+        public override object Parse(PropertyInfo property, object targetObject, ReadOnlySpan<char> rawFieldContent)
+        {
             if (property.PropertyType != typeof(string))
                 throw new ParseFieldException($"La propiedad de asignacion \"{targetObject.GetType().Name}" +
-                    $".{property.Name}\" no es del tipo bool nullable");
+                    $".{property.Name}\" no es del tipo string");
 
             return base.Parse(property, targetObject, rawFieldContent);
         }
@@ -36,7 +43,17 @@ namespace FixedWidthTextUtils.Attributes
             if (property.GetValue(originObject) == null) return this.TextForNull;
 
             return base.ToText(property, originObject);
+        }
 
+
+        public override void WriteTo(PropertyInfo property, object originObject, Span<char> destination)
+        {
+            if (property.GetValue(originObject) == null)
+            {
+                this.TextForNull.AsSpan().CopyTo(destination);
+                return;
+            }
+            base.WriteTo(property, originObject, destination);
         }
     }
 }
